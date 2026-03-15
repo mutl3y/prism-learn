@@ -1,0 +1,15 @@
+FROM docker.io/library/python:3.14-slim
+
+# Keep the base image minimal but practical for local scan/debug loops.
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends \
+        ca-certificates \
+        curl \
+        git \
+        make \
+        procps \
+    && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /workspace
+
+CMD ["sleep", "infinity"]

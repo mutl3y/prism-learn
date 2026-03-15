@@ -1,0 +1,13 @@
+# 12-repo sample batch for learning_app_scaffold repo scan
+https://github.com/geerlingguy/ansible-role-docker
+https://github.com/geerlingguy/ansible-role-nginx
+https://github.com/geerlingguy/ansible-role-apache
+https://github.com/geerlingguy/ansible-role-mysql
+https://github.com/geerlingguy/ansible-role-postgresql
+https://github.com/geerlingguy/ansible-role-php
+https://github.com/mutl3y/ansible_port_listener
+https://github.com/dev-sec/ansible-ssh-hardening
+https://github.com/bertvv/ansible-role-bind
+https://github.com/weareinteractive/ansible-ssh
+https://github.com/geerlingguy/ansible-role-java
+https://github.com/geerlingguy/ansible-role-nodejs

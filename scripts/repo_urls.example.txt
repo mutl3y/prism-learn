@@ -1,0 +1,4 @@
+# One repository URL per line. Blank lines and comments are ignored.
+https://github.com/geerlingguy/ansible-role-nginx
+https://github.com/geerlingguy/ansible-role-apache
+https://github.com/weareinteractive/ansible-ssh

@@ -1,0 +1,43 @@
+services:
+  postgres:
+    image: docker.io/library/postgres:16
+    container_name: ard-postgres
+    restart: unless-stopped
+    env_file:
+      - .env.podman
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-learning_scans}
+      POSTGRES_USER: ${POSTGRES_USER:-learning_user}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-learning_pass_change_me}
+    ports:
+      - "${POSTGRES_PORT:-5432}:5432"
+    volumes:
+      - ./.local/postgres-data:/var/lib/postgresql/data:Z
+      - ./infra/postgres/init:/docker-entrypoint-initdb.d:Z,ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-learning_user} -d ${POSTGRES_DB:-learning_scans}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  learning-base:
+    build:
+      context: .
+      dockerfile: infra/containers/learning-base/Containerfile
+    image: ansible-role-doc/learning-base:local
+    container_name: ard-learning-base
+    working_dir: /workspace
+    command: ["sleep", "infinity"]
+    env_file:
+      - .env.podman
+    environment:
+      DATABASE_URL: postgresql://${POSTGRES_USER:-learning_user}:${POSTGRES_PASSWORD:-learning_pass_change_me}@postgres:5432/${POSTGRES_DB:-learning_scans}
+    volumes:
+      - ./:/workspace:Z
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+networks:
+  default:
+    name: ard-local
