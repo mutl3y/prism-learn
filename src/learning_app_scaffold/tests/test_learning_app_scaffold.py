@@ -1,4 +1,6 @@
 import sys
+import threading
+import time
 import types
 
 import pytest
@@ -236,6 +238,48 @@ def test_batch_persistence_without_batch_methods_still_works(tmp_path):
     assert result.succeeded == 1
     assert result.failed == 1
     assert len(rows) == 2
+
+
+def test_batch_persistence_finishes_batch_on_keyboard_interrupt():
+    class _InterruptApi(_FakeApi):
+        def scan_role(self, role_path, **kwargs):
+            if role_path.endswith("interrupt"):
+                raise KeyboardInterrupt()
+            return {"role_name": "mock_role", "metadata": {"scanner_counters": {}}}
+
+    class _FakeBatchStore:
+        def __init__(self):
+            self.calls = []
+
+        def create_batch(self, **kwargs):
+            self.calls.append(("create_batch", kwargs))
+            return 7
+
+        def append(self, record, *, batch_id=None):
+            self.calls.append(("append", record.to_dict(), batch_id))
+
+        def finish_batch(self, **kwargs):
+            self.calls.append(("finish_batch", kwargs))
+
+    service = LearningLoopService(
+        api_module=_InterruptApi(), snapshot_store=_FakeBatchStore()
+    )
+
+    with pytest.raises(KeyboardInterrupt):
+        service.scan_role_batch(
+            ["/tmp/ok", "/tmp/interrupt"],
+            persist_records=True,
+            batch_run_label="interrupt-test",
+            batch_max_workers=1,
+        )
+
+    assert service._snapshot_store.calls[0][0] == "create_batch"
+    assert service._snapshot_store.calls[1][0] == "append"
+    assert service._snapshot_store.calls[1][2] == 7
+    assert service._snapshot_store.calls[-1] == (
+        "finish_batch",
+        {"batch_id": 7, "succeeded": 1, "failed": 0},
+    )
 
 
 def test_postgres_store_inserts_snapshot(monkeypatch):
@@ -902,3 +946,34 @@ def test_fetch_section_title_report_requires_driver(monkeypatch):
 
     with pytest.raises(RuntimeError, match="psycopg is required"):
         fetch_section_title_report("postgresql://test")
+
+
+def test_learning_loop_service_repo_batch_fanout_uses_multiple_workers():
+    class _SlowApi(_FakeApi):
+        def __init__(self):
+            super().__init__()
+            self.thread_ids = set()
+            self.lock = threading.Lock()
+
+        def scan_repo(self, repo_url, **kwargs):
+            with self.lock:
+                self.thread_ids.add(threading.get_ident())
+            time.sleep(0.05)
+            return {"role_name": repo_url.rsplit("/", 1)[-1], "metadata": {}}
+
+    fake_api = _SlowApi()
+    service = LearningLoopService(api_module=fake_api)
+
+    targets = [
+        "https://github.com/example/a.git",
+        "https://github.com/example/b.git",
+        "https://github.com/example/c.git",
+        "https://github.com/example/d.git",
+    ]
+    result = service.scan_repo_batch(targets, batch_max_workers=4)
+
+    assert result.total == 4
+    assert result.succeeded == 4
+    assert result.failed == 0
+    assert [item.target for item in result.items] == targets
+    assert len(fake_api.thread_ids) > 1

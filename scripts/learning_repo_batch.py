@@ -6,6 +6,7 @@ from __future__ import annotations
 import argparse
 import os
 from pathlib import Path
+import threading
 import sys
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
@@ -13,12 +14,12 @@ SRC_ROOT = REPO_ROOT / "src"
 if str(SRC_ROOT) not in sys.path:
     sys.path.insert(0, str(SRC_ROOT))
 
-from learning_app_scaffold import LearningLoopService
-from learning_app_scaffold import PostgresSnapshotStore
-from learning_app_scaffold import fetch_recent_batch_summary
-from learning_app_scaffold import fetch_recent_failures
-from learning_app_scaffold import load_repo_urls
-from learning_app_scaffold import split_fresh_repo_urls
+from learning_app_scaffold import LearningLoopService  # noqa: E402
+from learning_app_scaffold import PostgresSnapshotStore  # noqa: E402
+from learning_app_scaffold import fetch_recent_batch_summary  # noqa: E402
+from learning_app_scaffold import fetch_recent_failures  # noqa: E402
+from learning_app_scaffold import load_repo_urls  # noqa: E402
+from learning_app_scaffold import split_fresh_repo_urls  # noqa: E402
 
 
 def _resolve_dsn() -> str:
@@ -81,6 +82,22 @@ def main() -> int:
         action="store_true",
         help="Ignore freshness skipping and rescan all provided repository URLs.",
     )
+    parser.add_argument(
+        "--verbose",
+        action="store_true",
+        help="Print per-repository progress while processing the batch.",
+    )
+    parser.add_argument(
+        "--full-scan",
+        action="store_true",
+        help="Disable lightweight README-only mode and run full repository scans.",
+    )
+    parser.add_argument(
+        "--batch-workers",
+        type=int,
+        default=None,
+        help="Optional worker override for service-level batch fan-out.",
+    )
     args = parser.parse_args()
 
     repo_urls = load_repo_urls(args.repo_url, args.repo_url_file)
@@ -108,6 +125,30 @@ def main() -> int:
     store = PostgresSnapshotStore(dsn)
     service = LearningLoopService(snapshot_store=store)
 
+    if args.verbose:
+        total_targets = len(repo_urls_to_scan)
+        original_scan_repo = service.scan_repo
+        progress = {"index": 0}
+        progress_lock = threading.Lock()
+
+        def scan_repo_with_progress(repo_url: str, **kwargs):
+            with progress_lock:
+                progress["index"] += 1
+                index = progress["index"]
+            print(f"[{index}/{total_targets}] Scanning: {repo_url}")
+            try:
+                snapshot = original_scan_repo(repo_url, **kwargs)
+            except Exception as exc:
+                print(
+                    f"[{index}/{total_targets}] Failed: {repo_url} "
+                    f"({type(exc).__name__}: {exc})"
+                )
+                raise
+            print(f"[{index}/{total_targets}] Done: {repo_url}")
+            return snapshot
+
+        service.scan_repo = scan_repo_with_progress
+
     if not repo_urls_to_scan:
         print(
             "All repository URLs were skipped because their latest persisted scan is within "
@@ -133,23 +174,31 @@ def main() -> int:
                 )
         return 0
 
-    result = service.scan_repo_batch(
-        repo_urls_to_scan,
-        persist_records=True,
-        batch_run_label=args.run_label,
-        batch_metadata={
-            "invoked_by": "scripts/learning_repo_batch.py",
-            "repo_role_path": args.repo_role_path,
-            "repo_style_readme_path": args.repo_style_readme_path,
-            "target_count": len(repo_urls_to_scan),
-            "requested_target_count": len(repo_urls),
-            "skipped_recent_target_count": len(skipped_recent),
-            "skip_if_fresh_days": args.skip_if_fresh_days,
-            "force_rescan": args.force_rescan,
-        },
-        repo_role_path=args.repo_role_path,
-        repo_style_readme_path=args.repo_style_readme_path,
-    )
+    try:
+        result = service.scan_repo_batch(
+            repo_urls_to_scan,
+            persist_records=True,
+            batch_max_workers=args.batch_workers,
+            batch_run_label=args.run_label,
+            batch_metadata={
+                "invoked_by": "scripts/learning_repo_batch.py",
+                "repo_role_path": args.repo_role_path,
+                "repo_style_readme_path": args.repo_style_readme_path,
+                "lightweight_readme_only": not args.full_scan,
+                "batch_max_workers": args.batch_workers,
+                "target_count": len(repo_urls_to_scan),
+                "requested_target_count": len(repo_urls),
+                "skipped_recent_target_count": len(skipped_recent),
+                "skip_if_fresh_days": args.skip_if_fresh_days,
+                "force_rescan": args.force_rescan,
+            },
+            repo_role_path=args.repo_role_path,
+            repo_style_readme_path=args.repo_style_readme_path,
+            lightweight_readme_only=not args.full_scan,
+        )
+    except KeyboardInterrupt:
+        print("Interrupted by user (Ctrl+C).")
+        return 130
 
     print("Batch result:")
     print(result.to_dict())

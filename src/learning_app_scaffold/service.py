@@ -6,8 +6,10 @@ can evolve into a separate repository without carrying CLI coupling.
 
 from __future__ import annotations
 
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from dataclasses import asdict, dataclass
 from datetime import UTC, datetime
+import os
 from typing import TYPE_CHECKING, Any
 
 from ansible_role_doc import api as scanner_api
@@ -111,6 +113,7 @@ class LearningLoopService:
         persist_records: bool = False,
         batch_run_label: str | None = None,
         batch_metadata: dict[str, Any] | None = None,
+        batch_max_workers: int | None = None,
         **kwargs: Any,
     ) -> BatchScanResult:
         return self._scan_batch(
@@ -120,6 +123,7 @@ class LearningLoopService:
             persist_records=persist_records,
             batch_run_label=batch_run_label,
             batch_metadata=batch_metadata,
+            batch_max_workers=batch_max_workers,
             **kwargs,
         )
 
@@ -130,6 +134,7 @@ class LearningLoopService:
         persist_records: bool = False,
         batch_run_label: str | None = None,
         batch_metadata: dict[str, Any] | None = None,
+        batch_max_workers: int | None = None,
         **kwargs: Any,
     ) -> BatchScanResult:
         return self._scan_batch(
@@ -139,6 +144,7 @@ class LearningLoopService:
             persist_records=persist_records,
             batch_run_label=batch_run_label,
             batch_metadata=batch_metadata,
+            batch_max_workers=batch_max_workers,
             **kwargs,
         )
 
@@ -177,9 +183,10 @@ class LearningLoopService:
         persist_records: bool,
         batch_run_label: str | None,
         batch_metadata: dict[str, Any] | None,
+        batch_max_workers: int | None,
         **kwargs: Any,
     ) -> BatchScanResult:
-        items: list[ScanSnapshot | ScanFailureRecord] = []
+        items: list[ScanSnapshot | ScanFailureRecord | None] = [None] * len(targets)
         succeeded = 0
         failed = 0
         batch_id: int | None = None
@@ -196,36 +203,72 @@ class LearningLoopService:
                 metadata=batch_metadata,
             )
 
-        for target in targets:
-            try:
-                record = scanner(target, **kwargs)
-                succeeded += 1
-            except Exception as exc:
-                record = self._build_failure_record(target_type, target, exc)
-                failed += 1
+        worker_count = self._resolve_batch_workers(
+            requested_workers=batch_max_workers,
+            target_count=len(targets),
+        )
+        try:
+            if worker_count > 1 and len(targets) > 1:
+                executor = ThreadPoolExecutor(max_workers=worker_count)
+                interrupted = False
+                try:
+                    future_to_index = {
+                        executor.submit(scanner, target, **kwargs): index
+                        for index, target in enumerate(targets)
+                    }
+                    for future in as_completed(future_to_index):
+                        index = future_to_index[future]
+                        target = targets[index]
+                        try:
+                            record = future.result()
+                            succeeded += 1
+                        except Exception as exc:
+                            record = self._build_failure_record(
+                                target_type, target, exc
+                            )
+                            failed += 1
 
-            if persist_records:
-                self._persist_record(record, batch_id=batch_id)
-            items.append(record)
+                        if persist_records:
+                            self._persist_record(record, batch_id=batch_id)
+                        items[index] = record
+                except KeyboardInterrupt:
+                    interrupted = True
+                    executor.shutdown(wait=False, cancel_futures=True)
+                    raise
+                finally:
+                    if not interrupted:
+                        executor.shutdown(wait=True)
+            else:
+                for index, target in enumerate(targets):
+                    try:
+                        record = scanner(target, **kwargs)
+                        succeeded += 1
+                    except Exception as exc:
+                        record = self._build_failure_record(target_type, target, exc)
+                        failed += 1
 
-        if (
-            persist_records
-            and batch_id is not None
-            and self._snapshot_store is not None
-            and hasattr(self._snapshot_store, "finish_batch")
-        ):
-            self._snapshot_store.finish_batch(
-                batch_id=batch_id,
-                succeeded=succeeded,
-                failed=failed,
-            )
+                    if persist_records:
+                        self._persist_record(record, batch_id=batch_id)
+                    items[index] = record
+        finally:
+            if (
+                persist_records
+                and batch_id is not None
+                and self._snapshot_store is not None
+                and hasattr(self._snapshot_store, "finish_batch")
+            ):
+                self._snapshot_store.finish_batch(
+                    batch_id=batch_id,
+                    succeeded=succeeded,
+                    failed=failed,
+                )
 
         return BatchScanResult(
             target_type=target_type,
             total=len(targets),
             succeeded=succeeded,
             failed=failed,
-            items=items,
+            items=[item for item in items if item is not None],
         )
 
     def _persist_record(
@@ -245,3 +288,19 @@ class LearningLoopService:
                 pass
 
         self._snapshot_store.append(record)
+
+    def _resolve_batch_workers(
+        self,
+        *,
+        requested_workers: int | None,
+        target_count: int,
+    ) -> int:
+        if target_count <= 1:
+            return 1
+        if requested_workers is not None:
+            return max(1, min(requested_workers, target_count))
+
+        # Batch scanning is network and filesystem heavy, so default to a
+        # higher IO-bound worker fan-out than CPU-bound workloads.
+        default_workers = max(8, (os.cpu_count() or 1) * 8)
+        return min(default_workers, target_count)

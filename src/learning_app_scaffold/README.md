@@ -92,6 +92,7 @@ When `snapshot_store` is a `PostgresSnapshotStore`, calling `scan_role_batch(...
 CLI-style helper for URL lists:
 
 ```bash
+pip install -e .[dev]
 set -a; . ./.env.podman; set +a
 .venv/bin/python scripts/learning_repo_batch.py \
     --repo-url-file scripts/repo_urls.example.txt \
