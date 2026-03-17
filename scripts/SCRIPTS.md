@@ -278,6 +278,51 @@ Key `export-aliases` options:
 - `--min-count`
 - `--dry-run`
 
+### `cli_demo_matrix.py`
+Generates small, comparable CLI demo artifacts one scenario at a time.
+
+This helper prepares stable fixture copies under `debug_readmes/option_demos/` and
+runs only the selected scenario(s), which keeps terminal output short and makes
+it suitable for dedicated/background terminal runs.
+
+Examples:
+
+```bash
+python3 scripts/cli_demo_matrix.py
+python3 scripts/cli_demo_matrix.py --scenario role-default --scenario role-styled
+python3 scripts/cli_demo_matrix.py --runtime podman --start-stack --scenario collection-md
+python3 scripts/cli_demo_matrix.py --list-scenarios
+```
+
+Key options:
+
+- `--scenario` (repeatable)
+- `--runtime {local,podman}`
+- `--prepare-only`
+- `--keep-existing`
+- `--start-stack`
+- `--compose-file`
+- `--env-file`
+- `--service`
+- `--python-command`
+- `--continue-on-error`
+
+Default local comparison set:
+
+- `role-default`
+- `role-concise`
+- `role-detailed-catalog`
+- `role-styled`
+- `role-html`
+- `role-json`
+- `collection-md`
+- `collection-json`
+
+Notes:
+
+- PDF demos are skipped automatically when `weasyprint` is unavailable.
+- `.vscode/tasks.json` includes dedicated tasks for the common demo/test entry points.
+
 Key `merge-aliases` options:
 
 - `--base`
