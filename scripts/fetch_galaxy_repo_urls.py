@@ -34,7 +34,7 @@ def _fetch_page(url: str) -> dict:
                 url,
                 headers={
                     "Accept": "application/json",
-                    "User-Agent": "ansible-role-doc-fetcher/1.0",
+                    "User-Agent": "prism-fetcher/1.0",
                 },
             )
             with urllib.request.urlopen(req, timeout=30) as resp:

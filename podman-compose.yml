@@ -24,7 +24,7 @@ services:
     build:
       context: .
       dockerfile: infra/containers/learning-base/Containerfile
-    image: ansible-role-doc/learning-base:local
+    image: prism/learning-base:local
     container_name: ard-learning-base
     working_dir: /workspace
     command: ["sleep", "infinity"]

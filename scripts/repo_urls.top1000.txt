@@ -55,7 +55,7 @@ https://github.com/HarryHarcourt/Ansible-RHEL7-CIS-Benchmarks
 https://github.com/ansible-lockdown/RHEL6-STIG
 https://github.com/mikegleasonjr/ansible-role-firewall
 https://github.com/jonashackt/molecule-ansible-docker-aws
-https://github.com/haxorof/ansible-role-docker-ce
+https://github.com/haxorof/prismker-ce
 https://github.com/rdiers/CentOS7-CIS
 https://github.com/florianutz/Ubuntu1604-CIS
 https://github.com/ansible-lockdown/DEBIAN12-CIS
@@ -296,7 +296,7 @@ https://github.com/githubixx/ansible-role-kubernetes-worker
 https://github.com/simoncaron/ansible-role-pve_acme
 https://github.com/foundata/ansible-skeletons
 https://github.com/kosalaat/oracle_install
-https://github.com/wayofdev/ansible-role-dock
+https://github.com/wayofdev/prismk
 https://github.com/mrlesmithjr/ansible-pacemaker
 https://github.com/savoirfairelinux/ansible-django
 https://github.com/strapsh/strap
@@ -306,7 +306,7 @@ https://github.com/hostwithquantum/ansible-loki
 https://github.com/hellofresh/ansible-consul
 https://github.com/alessfg/nginx-ansible-demo
 https://github.com/craigpearson/trellis-ca-certificates
-https://github.com/githubixx/ansible-role-docker
+https://github.com/githubixx/prismker
 https://github.com/MatthiasLohr/ansible-role-tincvpn
 https://github.com/chouseknecht/minishift-up-role
 https://github.com/cisco-open/ndfc-roles
