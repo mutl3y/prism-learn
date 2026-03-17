@@ -50,6 +50,47 @@ CREATE TABLE IF NOT EXISTS learning.scan_failures (
     UNIQUE (failure_uid)
 );
 
+-- Human-readable display titles for known section IDs.
+-- section_id stays as the stable internal key; display_title is what appears in reports.
+-- Update freely without touching any other table.
+CREATE TABLE IF NOT EXISTS learning.section_display_titles (
+    section_id TEXT PRIMARY KEY,
+    display_title TEXT NOT NULL,
+    updated_at_utc TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    CHECK (length(trim(section_id)) > 0),
+    CHECK (length(trim(display_title)) > 0)
+);
+
+-- Approved normalized-title aliases for persistent reduction of unknown section labels.
+CREATE TABLE IF NOT EXISTS learning.section_title_aliases (
+    normalized_title TEXT PRIMARY KEY,
+    section_id TEXT NOT NULL,
+    source TEXT NOT NULL DEFAULT 'manual_review',
+    approved_at_utc TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    metadata JSONB NOT NULL DEFAULT '{}'::jsonb,
+    CHECK (length(trim(normalized_title)) > 0),
+    CHECK (length(trim(section_id)) > 0)
+);
+
+-- Derived per-section rows materialized from scan_snapshots.scan_payload.
+-- Keeps raw JSON immutable while supporting fast aggregate queries.
+CREATE TABLE IF NOT EXISTS learning.scan_snapshot_sections (
+    id BIGSERIAL PRIMARY KEY,
+    snapshot_id BIGINT NOT NULL REFERENCES learning.scan_snapshots(id) ON DELETE CASCADE,
+    section_index INTEGER NOT NULL,
+    target_type TEXT NOT NULL,
+    target TEXT NOT NULL,
+    captured_at_utc TIMESTAMPTZ NOT NULL,
+    batch_id BIGINT,
+    raw_section_id TEXT NOT NULL,
+    effective_section_id TEXT NOT NULL,
+    title TEXT NOT NULL,
+    normalized_title TEXT NOT NULL,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    UNIQUE (snapshot_id, section_index)
+);
+
 CREATE INDEX IF NOT EXISTS idx_scan_batches_started_at
     ON learning.scan_batches (started_at_utc DESC);
 
@@ -70,6 +111,21 @@ CREATE INDEX IF NOT EXISTS idx_scan_failures_captured_at
 
 CREATE INDEX IF NOT EXISTS idx_scan_failures_target
     ON learning.scan_failures (target_type, target, captured_at_utc DESC);
+
+CREATE INDEX IF NOT EXISTS idx_section_aliases_section_id
+    ON learning.section_title_aliases (section_id);
+
+CREATE INDEX IF NOT EXISTS idx_snapshot_sections_snapshot
+    ON learning.scan_snapshot_sections (snapshot_id);
+
+CREATE INDEX IF NOT EXISTS idx_snapshot_sections_effective_section
+    ON learning.scan_snapshot_sections (effective_section_id);
+
+CREATE INDEX IF NOT EXISTS idx_snapshot_sections_normalized_title
+    ON learning.scan_snapshot_sections (normalized_title);
+
+CREATE INDEX IF NOT EXISTS idx_snapshot_sections_target
+    ON learning.scan_snapshot_sections (target_type, target, captured_at_utc DESC);
 
 CREATE VIEW learning.latest_snapshot_per_target AS
 SELECT DISTINCT ON (s.target_type, s.target)

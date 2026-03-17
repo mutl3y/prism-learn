@@ -216,9 +216,237 @@ def fetch_section_title_report(
     batch_id: int | None = None,
     run_label: str | None = None,
     latest_per_target: bool = True,
+    source: str = "raw",
 ) -> dict[str, Any]:
     """Aggregate persisted style-guide section-title observations."""
     psycopg = _require_psycopg()
+
+    if source not in {"raw", "reduced"}:
+        raise ValueError("source must be one of: raw, reduced")
+
+    if source == "reduced":
+        filters: list[str] = ["1=1"]
+        params: list[Any] = []
+
+        if batch_id is not None:
+            filters.append("s.batch_id = %s")
+            params.append(batch_id)
+
+        if run_label is not None:
+            filters.append("b.run_label = %s")
+            params.append(run_label)
+
+        where_clause = " AND ".join(filters)
+        ranking_clause = "WHERE ranked.rn = 1" if latest_per_target else ""
+        sql = f"""
+            WITH candidate_snapshots AS (
+                SELECT DISTINCT
+                    s.snapshot_id,
+                    s.target,
+                    s.batch_id,
+                    s.captured_at_utc
+                FROM learning.scan_snapshot_sections AS s
+                LEFT JOIN learning.scan_batches AS b ON b.id = s.batch_id
+                WHERE {where_clause}
+            ),
+            ranked AS (
+                SELECT
+                    snapshot_id,
+                    target,
+                    batch_id,
+                    captured_at_utc,
+                    ROW_NUMBER() OVER (
+                        PARTITION BY target
+                        ORDER BY captured_at_utc DESC, snapshot_id DESC
+                    ) AS rn
+                FROM candidate_snapshots
+            ),
+            selected_snapshots AS (
+                SELECT
+                    snapshot_id,
+                    target,
+                    batch_id,
+                    captured_at_utc
+                FROM ranked
+                {ranking_clause}
+            )
+            SELECT
+                sec.snapshot_id,
+                sec.target,
+                sec.batch_id,
+                sec.captured_at_utc,
+                sec.effective_section_id,
+                sec.title,
+                sec.normalized_title
+            FROM learning.scan_snapshot_sections AS sec
+            JOIN selected_snapshots AS ss ON ss.snapshot_id = sec.snapshot_id
+            ORDER BY sec.captured_at_utc DESC, sec.target ASC, sec.snapshot_id ASC, sec.section_index ASC
+        """
+
+        with psycopg.connect(dsn) as conn:
+            with conn.cursor() as cur:
+                try:
+                    cur.execute(sql, tuple(params))
+                except Exception as exc:
+                    if "scan_snapshot_sections" in str(exc):
+                        raise RuntimeError(
+                            "Reduced source requested but learning.scan_snapshot_sections is unavailable. "
+                            "Run scripts/learning_materialize_sections.py first."
+                        ) from exc
+                    raise
+                rows = cur.fetchall()
+
+                # Fetch display titles (best-effort; table may not exist yet)
+                display_titles: dict[str, str] = {}
+                try:
+                    cur.execute(
+                        "SELECT section_id, display_title FROM learning.section_display_titles"
+                    )
+                    display_titles = {r[0]: r[1] for r in cur.fetchall()}
+                except Exception:
+                    pass
+
+        section_buckets: dict[str, dict[str, Any]] = {}
+        unknown_title_buckets: dict[str, dict[str, Any]] = {}
+        distinct_targets: set[str] = set()
+        distinct_snapshots: set[int] = set()
+        total_sections = 0
+        known_sections = 0
+        unknown_sections = 0
+
+        for (
+            snapshot_id,
+            target,
+            row_batch_id,
+            captured_at_utc,
+            section_id,
+            title,
+            normalized_title,
+        ) in rows:
+            sid = str(section_id or "unknown")
+            heading = (
+                str(title or "").strip() or str(normalized_title or "").strip() or sid
+            )
+            normalized = str(
+                normalized_title or ""
+            ).strip() or _normalize_style_heading(heading)
+
+            distinct_targets.add(str(target))
+            distinct_snapshots.add(int(snapshot_id))
+            total_sections += 1
+            if sid == "unknown":
+                unknown_sections += 1
+            else:
+                known_sections += 1
+
+            aggregate = section_buckets.setdefault(
+                sid,
+                {
+                    "section_id": sid,
+                    "known": sid != "unknown",
+                    "count": 0,
+                    "snapshot_count": 0,
+                    "targets": set(),
+                    "title_counts": Counter(),
+                    "normalized_title_counts": Counter(),
+                    "seen_snapshots": set(),
+                },
+            )
+            aggregate["count"] = int(aggregate["count"]) + 1
+            aggregate["targets"].add(str(target))
+            aggregate["title_counts"][heading] += 1
+            aggregate["normalized_title_counts"][normalized] += 1
+            if int(snapshot_id) not in aggregate["seen_snapshots"]:
+                aggregate["snapshot_count"] = int(aggregate["snapshot_count"]) + 1
+                aggregate["seen_snapshots"].add(int(snapshot_id))
+
+            if sid != "unknown":
+                continue
+
+            unknown_bucket = unknown_title_buckets.setdefault(
+                normalized,
+                {
+                    "normalized_title": normalized,
+                    "count": 0,
+                    "titles": Counter(),
+                    "targets": set(),
+                    "batch_ids": set(),
+                    "latest_seen_at": captured_at_utc,
+                    "seen_snapshots": set(),
+                },
+            )
+            unknown_bucket["titles"][heading] += 1
+            unknown_bucket["targets"].add(str(target))
+            if row_batch_id is not None:
+                unknown_bucket["batch_ids"].add(int(row_batch_id))
+            if str(captured_at_utc) > str(unknown_bucket["latest_seen_at"]):
+                unknown_bucket["latest_seen_at"] = captured_at_utc
+            if int(snapshot_id) not in unknown_bucket["seen_snapshots"]:
+                unknown_bucket["count"] = int(unknown_bucket["count"]) + 1
+                unknown_bucket["seen_snapshots"].add(int(snapshot_id))
+
+        sections = []
+        for aggregate in section_buckets.values():
+            sid = aggregate["section_id"]
+            sections.append(
+                {
+                    "section_id": sid,
+                    "display_title": display_titles.get(sid),
+                    "known": aggregate["known"],
+                    "count": aggregate["count"],
+                    "snapshot_count": aggregate["snapshot_count"],
+                    "distinct_targets": len(aggregate["targets"]),
+                    "sample_targets": sorted(aggregate["targets"])[:5],
+                    "titles": [
+                        {"title": title, "count": count}
+                        for title, count in aggregate["title_counts"].most_common()
+                    ],
+                    "normalized_titles": [
+                        {"title": title, "count": count}
+                        for title, count in aggregate[
+                            "normalized_title_counts"
+                        ].most_common()
+                    ],
+                }
+            )
+
+        unknown_titles = []
+        for aggregate in unknown_title_buckets.values():
+            unknown_titles.append(
+                {
+                    "normalized_title": aggregate["normalized_title"],
+                    "count": aggregate["count"],
+                    "distinct_targets": len(aggregate["targets"]),
+                    "sample_targets": sorted(aggregate["targets"])[:5],
+                    "batch_ids": sorted(aggregate["batch_ids"]),
+                    "latest_seen_at": aggregate["latest_seen_at"],
+                    "titles": [
+                        {"title": title, "count": count}
+                        for title, count in aggregate["titles"].most_common()
+                    ],
+                }
+            )
+
+        sections.sort(key=lambda item: (-int(item["count"]), str(item["section_id"])))
+        unknown_titles.sort(
+            key=lambda item: (-int(item["count"]), str(item["normalized_title"]))
+        )
+
+        return {
+            "selection": {
+                "batch_id": batch_id,
+                "run_label": run_label,
+                "latest_per_target": latest_per_target,
+                "source": source,
+            },
+            "snapshot_count": len(distinct_snapshots),
+            "distinct_targets": len(distinct_targets),
+            "total_sections": total_sections,
+            "known_sections": known_sections,
+            "unknown_sections": unknown_sections,
+            "sections": sections,
+            "unknown_titles": unknown_titles,
+        }
 
     filters: list[str] = [
         "("
@@ -400,6 +628,7 @@ def fetch_section_title_report(
             "batch_id": batch_id,
             "run_label": run_label,
             "latest_per_target": latest_per_target,
+            "source": source,
         },
         "snapshot_count": len(rows),
         "distinct_targets": len(distinct_targets),

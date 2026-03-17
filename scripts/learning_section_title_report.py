@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import argparse
+import json
 import os
 from pathlib import Path
 import sys
@@ -31,7 +32,10 @@ def _resolve_dsn() -> str:
 def _format_variant_list(items: list[dict[str, object]], limit: int) -> str:
     if not items:
         return "-"
-    return ", ".join(f"{item['title']} ({item['count']})" for item in items[:limit])
+    return ", ".join(
+        f"{_strip_backticks(str(item['title']))} ({item['count']})"
+        for item in items[:limit]
+    )
 
 
 def _format_targets(targets: list[str]) -> str:
@@ -40,9 +44,69 @@ def _format_targets(targets: list[str]) -> str:
     return ", ".join(targets)
 
 
-def render_markdown(report: dict[str, object], *, top_variants: int) -> str:
+def _strip_backticks(text: str) -> str:
+    """Remove markdown inline-code ticks from rendered report text."""
+    return text.replace("`", "")
+
+
+def _find_backtick_title_candidates(
+    report: dict[str, object], *, top_variants: int
+) -> list[dict[str, object]]:
+    """Return section/title entries whose observed heading text contains backticks."""
+    candidates: list[dict[str, object]] = []
+
+    for section in report.get("sections", []):
+        section_id = str(section.get("section_id") or "")
+        section_label = str(section.get("display_title") or section_id)
+        for variant in section.get("titles", []):
+            title = str(variant.get("title") or "")
+            if "`" not in title:
+                continue
+            candidates.append(
+                {
+                    "kind": "known_section_variant",
+                    "group": section_label,
+                    "normalized": section_id,
+                    "title": _strip_backticks(title),
+                    "count": int(variant.get("count") or 0),
+                }
+            )
+
+    for item in report.get("unknown_titles", []):
+        normalized = str(item.get("normalized_title") or "")
+        for variant in item.get("titles", []):
+            title = str(variant.get("title") or "")
+            if "`" not in title:
+                continue
+            candidates.append(
+                {
+                    "kind": "unknown_title_variant",
+                    "group": normalized,
+                    "normalized": normalized,
+                    "title": _strip_backticks(title),
+                    "count": int(variant.get("count") or 0),
+                }
+            )
+
+    candidates.sort(key=lambda item: (-(int(item["count"])), str(item["title"])))
+    return candidates[:top_variants]
+
+
+def render_markdown(
+    report: dict[str, object],
+    *,
+    top_variants: int,
+    min_section_count: int = 1,
+    min_unknown_count: int = 1,
+) -> str:
     selection = report["selection"]
+    backtick_candidates = _find_backtick_title_candidates(
+        report,
+        top_variants=top_variants,
+    )
+
     lines = ["# Style Section Title Report", ""]
+    lines.append(f"- Data source: {selection.get('source', 'raw')}")
     lines.append(
         f"- Snapshot selection: {'latest snapshot per target' if selection['latest_per_target'] else 'all matching snapshots'}"
     )
@@ -58,18 +122,31 @@ def render_markdown(report: dict[str, object], *, top_variants: int) -> str:
     lines.append(
         "- Variant counts below mean the number of persisted snapshots in which that title was observed."
     )
+    if min_section_count > 1 or min_unknown_count > 1:
+        filter_parts = []
+        if min_section_count > 1:
+            filter_parts.append(f"min section count={min_section_count}")
+        if min_unknown_count > 1:
+            filter_parts.append(f"min unknown count={min_unknown_count}")
+        lines.append(f"- Filters: {', '.join(filter_parts)}")
+    lines.append(f"- Backtick title variants detected: {len(backtick_candidates)}")
     lines.append("")
 
     lines.append("## Known Section Variants")
     lines.append("")
-    lines.append("| Section ID | Count | Targets | Top observed titles |")
+    lines.append("| Section | Count | Targets | Top observed titles |")
     lines.append("|---|---:|---:|---|")
     for section in report["sections"]:
         if not section["known"]:
             continue
+        if int(section["count"]) < min_section_count:
+            continue
+        sid = section["section_id"]
+        display = section.get("display_title")
+        section_label = f"{display} (`{sid}`)" if display else sid
         lines.append(
-            "| {section_id} | {count} | {distinct_targets} | {titles} |".format(
-                section_id=section["section_id"],
+            "| {section_label} | {count} | {distinct_targets} | {titles} |".format(
+                section_label=section_label,
                 count=section["count"],
                 distinct_targets=section["distinct_targets"],
                 titles=_format_variant_list(section["titles"], top_variants).replace(
@@ -85,7 +162,11 @@ def render_markdown(report: dict[str, object], *, top_variants: int) -> str:
         "| Normalized title | Snapshots | Targets | Example titles | Sample targets |"
     )
     lines.append("|---|---:|---:|---|---|")
-    unknown_titles = report["unknown_titles"]
+    unknown_titles = [
+        item
+        for item in report["unknown_titles"]
+        if int(item["count"]) >= min_unknown_count
+    ]
     if unknown_titles:
         for item in unknown_titles:
             lines.append(
@@ -101,6 +182,22 @@ def render_markdown(report: dict[str, object], *, top_variants: int) -> str:
             )
     else:
         lines.append("| none | 0 | 0 | - | - |")
+
+    if backtick_candidates:
+        lines.append("")
+        lines.append("## Backtick Title Variant Checks")
+        lines.append("")
+        lines.append("| Kind | Group | Observed title | Count |")
+        lines.append("|---|---|---|---:|")
+        for item in backtick_candidates:
+            lines.append(
+                "| {kind} | {group} | {title} | {count} |".format(
+                    kind=str(item["kind"]).replace("|", "\\|"),
+                    group=str(item["group"]).replace("|", "\\|"),
+                    title=str(item["title"]).replace("|", "\\|"),
+                    count=item["count"],
+                )
+            )
 
     return "\n".join(lines) + "\n"
 
@@ -135,6 +232,30 @@ def main() -> int:
         default=None,
         help="Optional path to write the markdown report to.",
     )
+    parser.add_argument(
+        "--min-section-count",
+        type=int,
+        default=1,
+        help="Hide known-section rows whose snapshot count is below this threshold (default: 1).",
+    )
+    parser.add_argument(
+        "--min-unknown-count",
+        type=int,
+        default=1,
+        help="Hide unknown-title rows whose snapshot count is below this threshold (default: 1).",
+    )
+    parser.add_argument(
+        "--output-json",
+        default=None,
+        metavar="PATH",
+        help="Write the raw report dict as JSON to PATH (useful as offline input for learning_resolve_unknowns.py).",
+    )
+    parser.add_argument(
+        "--source",
+        choices=("raw", "reduced"),
+        default="raw",
+        help="Choose report source: raw scan_snapshots payloads or reduced materialized table (default: raw).",
+    )
     args = parser.parse_args()
 
     report = fetch_section_title_report(
@@ -142,8 +263,23 @@ def main() -> int:
         batch_id=args.batch_id,
         run_label=args.run_label,
         latest_per_target=not args.all_snapshots,
+        source=args.source,
     )
-    markdown = render_markdown(report, top_variants=args.top_variants)
+
+    if args.output_json:
+        json_path = Path(args.output_json)
+        json_path.parent.mkdir(parents=True, exist_ok=True)
+        json_path.write_text(
+            json.dumps(report, default=str, indent=2), encoding="utf-8"
+        )
+        print(f"Wrote JSON: {json_path}")
+
+    markdown = render_markdown(
+        report,
+        top_variants=args.top_variants,
+        min_section_count=args.min_section_count,
+        min_unknown_count=args.min_unknown_count,
+    )
 
     if args.output:
         output_path = Path(args.output)
@@ -151,7 +287,11 @@ def main() -> int:
         output_path.write_text(markdown, encoding="utf-8")
         print(f"Wrote: {output_path}")
     else:
-        print(markdown, end="")
+        try:
+            print(markdown, end="")
+            sys.stdout.flush()
+        except BrokenPipeError:
+            sys.stdout = open(os.devnull, "w")
 
     return 0
 
