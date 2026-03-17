@@ -841,9 +841,7 @@ def _build_parser() -> argparse.ArgumentParser:
     )
     export_aliases_cmd.add_argument(
         "--output",
-        default=str(
-            REPO_ROOT / "src/prism/data/section_aliases.learned.yml"
-        ),
+        default=str(REPO_ROOT / "src/prism/data/section_aliases.learned.yml"),
         help="Output YAML path (default: src/prism/data/section_aliases.learned.yml).",
     )
     export_aliases_cmd.add_argument("--dsn", default=None)
@@ -866,9 +864,7 @@ def _build_parser() -> argparse.ArgumentParser:
     )
     merge_aliases_cmd.add_argument(
         "--learned",
-        default=str(
-            REPO_ROOT / "src/prism/data/section_aliases.learned.yml"
-        ),
+        default=str(REPO_ROOT / "src/prism/data/section_aliases.learned.yml"),
         help="Learned aliases YAML to merge from.",
     )
     merge_aliases_cmd.add_argument(
