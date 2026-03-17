@@ -1,4 +1,4 @@
-"""Minimal learning-loop scaffold built on the public ansible_role_doc API."""
+"""Minimal learning-loop scaffold built on the public prism API."""
 
 from .batching import load_repo_urls, split_fresh_repo_urls
 from .service import BatchScanResult, LearningLoopService, ScanFailureRecord

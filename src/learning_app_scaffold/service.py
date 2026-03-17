@@ -1,6 +1,6 @@
 """Minimal scaffold for a future learning-loop orchestration app.
 
-The scaffold intentionally depends only on the public ansible_role_doc API so it
+The scaffold intentionally depends only on the public prism API so it
 can evolve into a separate repository without carrying CLI coupling.
 """
 
@@ -12,7 +12,7 @@ from datetime import UTC, datetime
 import os
 from typing import TYPE_CHECKING, Any
 
-from ansible_role_doc import api as scanner_api
+from prism import api as scanner_api
 
 if TYPE_CHECKING:
     from .storage import SnapshotJsonlStore

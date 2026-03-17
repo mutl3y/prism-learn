@@ -21,7 +21,7 @@ from learning_app_scaffold import fetch_recent_failures  # noqa: E402
 
 def _default_targets(repo_root: Path) -> list[str]:
     return [
-        str((repo_root / "src/ansible_role_doc/tests/roles/base_mock_role").resolve()),
+        str((repo_root / "src/prism/tests/roles/base_mock_role").resolve()),
         str((repo_root / "missing-role-does-not-exist").resolve()),
     ]
 

@@ -6,13 +6,13 @@ materialization.
 
 ## Running Commands
 
-From repo root (`/raid5/source/test/ansible_role_doc`):
+From repo root (`/raid5/source/test/prism`):
 
 ```bash
 python3 scripts/<script>.py ...
 ```
 
-From inside this folder (`/raid5/source/test/ansible_role_doc/scripts`):
+From inside this folder (`/raid5/source/test/prism/scripts`):
 
 ```bash
 python3 <script>.py ...
@@ -65,7 +65,7 @@ Examples:
 
 ```bash
 python3 scripts/learning_repo_batch.py --repo-url-file scripts/repo_urls.sample12.txt --run-label repo-batch-sample
-python3 scripts/learning_repo_batch.py --repo-url https://github.com/geerlingguy/ansible-role-docker --force-rescan --verbose
+python3 scripts/learning_repo_batch.py --repo-url https://github.com/geerlingguy/prismker --force-rescan --verbose
 ```
 
 Key options:
@@ -85,7 +85,7 @@ Examples:
 
 ```bash
 python3 scripts/learning_batch_smoke.py
-python3 scripts/learning_batch_smoke.py --role-path src/ansible_role_doc/tests/roles/base_mock_role --run-label local-smoke-custom
+python3 scripts/learning_batch_smoke.py --role-path src/prism/tests/roles/base_mock_role --run-label local-smoke-custom
 ```
 
 Key options:
@@ -225,7 +225,7 @@ Subcommands:
 - `apply`: parses candidates YAML and upserts aliases to Postgres, then optionally rematerializes
 - `suggest-canonical`: reports top observed title per section and can write review YAML
 - `apply-display-titles`: upserts display-title labels into Postgres lookup table
-- `export-aliases`: exports learned DB aliases to YAML in `src/ansible_role_doc/data/`
+- `export-aliases`: exports learned DB aliases to YAML in `src/prism/data/`
 - `merge-aliases`: merges learned aliases YAML into canonical `section_aliases.yml`
 - `rename-section`: bulk section-id rename in Postgres tables
 - `apply-renames`: apply batch section-id renames from YAML

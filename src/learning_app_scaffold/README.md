@@ -4,7 +4,7 @@ This folder is a minimal scaffold for the future learning-loop orchestration app
 
 Design constraints:
 
-- It imports only the public `ansible_role_doc.api` surface.
+- It imports only the public `prism.api` surface.
 - It does not call CLI entry points.
 - It wraps scan results in a persistence-friendly snapshot envelope.
 

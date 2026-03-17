@@ -220,7 +220,7 @@ def _run_export_aliases(args: argparse.Namespace) -> int:
 
     lines = [
         "# Learned aliases exported from learning.section_title_aliases",
-        "# Review and merge into src/ansible_role_doc/data/section_aliases.yml",
+        "# Review and merge into src/prism/data/section_aliases.yml",
         f"# Exported by learning_alias_helper.py on {output_path}",
         "",
         "section_aliases:",
@@ -837,14 +837,14 @@ def _build_parser() -> argparse.ArgumentParser:
 
     export_aliases_cmd = sub.add_parser(
         "export-aliases",
-        help="Export learned DB aliases to a YAML file in src/ansible_role_doc/data.",
+        help="Export learned DB aliases to a YAML file in src/prism/data.",
     )
     export_aliases_cmd.add_argument(
         "--output",
         default=str(
-            REPO_ROOT / "src/ansible_role_doc/data/section_aliases.learned.yml"
+            REPO_ROOT / "src/prism/data/section_aliases.learned.yml"
         ),
-        help="Output YAML path (default: src/ansible_role_doc/data/section_aliases.learned.yml).",
+        help="Output YAML path (default: src/prism/data/section_aliases.learned.yml).",
     )
     export_aliases_cmd.add_argument("--dsn", default=None)
     export_aliases_cmd.add_argument(
@@ -861,19 +861,19 @@ def _build_parser() -> argparse.ArgumentParser:
     )
     merge_aliases_cmd.add_argument(
         "--base",
-        default=str(REPO_ROOT / "src/ansible_role_doc/data/section_aliases.yml"),
+        default=str(REPO_ROOT / "src/prism/data/section_aliases.yml"),
         help="Base aliases YAML to merge into.",
     )
     merge_aliases_cmd.add_argument(
         "--learned",
         default=str(
-            REPO_ROOT / "src/ansible_role_doc/data/section_aliases.learned.yml"
+            REPO_ROOT / "src/prism/data/section_aliases.learned.yml"
         ),
         help="Learned aliases YAML to merge from.",
     )
     merge_aliases_cmd.add_argument(
         "--output",
-        default=str(REPO_ROOT / "src/ansible_role_doc/data/section_aliases.yml"),
+        default=str(REPO_ROOT / "src/prism/data/section_aliases.yml"),
         help="Output merged aliases YAML path.",
     )
     merge_aliases_cmd.add_argument("--dry-run", action="store_true")
