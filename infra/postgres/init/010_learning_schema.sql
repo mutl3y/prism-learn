@@ -91,6 +91,22 @@ CREATE TABLE IF NOT EXISTS learning.scan_snapshot_sections (
     UNIQUE (snapshot_id, section_index)
 );
 
+-- Optional feedback loop storage for section ranking/tuning.
+CREATE TABLE IF NOT EXISTS learning.section_feedback (
+    id BIGSERIAL PRIMARY KEY,
+    feedback_uid UUID NOT NULL DEFAULT gen_random_uuid(),
+    target TEXT NOT NULL,
+    section_id TEXT NOT NULL,
+    section_quality SMALLINT NOT NULL CHECK (section_quality BETWEEN 1 AND 5),
+    title_helpfulness SMALLINT NOT NULL CHECK (title_helpfulness BETWEEN 1 AND 5),
+    content_accuracy SMALLINT NOT NULL CHECK (content_accuracy BETWEEN 1 AND 5),
+    notes TEXT,
+    source TEXT NOT NULL DEFAULT 'manual_review',
+    captured_at_utc TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    UNIQUE (feedback_uid)
+);
+
 CREATE INDEX IF NOT EXISTS idx_scan_batches_started_at
     ON learning.scan_batches (started_at_utc DESC);
 
@@ -126,6 +142,12 @@ CREATE INDEX IF NOT EXISTS idx_snapshot_sections_normalized_title
 
 CREATE INDEX IF NOT EXISTS idx_snapshot_sections_target
     ON learning.scan_snapshot_sections (target_type, target, captured_at_utc DESC);
+
+CREATE INDEX IF NOT EXISTS idx_section_feedback_section
+    ON learning.section_feedback (section_id, captured_at_utc DESC);
+
+CREATE INDEX IF NOT EXISTS idx_section_feedback_target
+    ON learning.section_feedback (target, captured_at_utc DESC);
 
 CREATE VIEW learning.latest_snapshot_per_target AS
 SELECT DISTINCT ON (s.target_type, s.target)

@@ -123,6 +123,49 @@ Key options:
 - `--output-json`
 - `-o/--output`
 
+### `learning_doc_quality_report.py`
+Builds markdown report for before/after document quality metrics per target.
+
+It compares each target's latest snapshot with its previous snapshot and reports deltas for:
+
+- `variable_count`
+- `resolved_count`
+- `unresolved_count`
+- `ambiguity_count`
+- `confidence_avg`
+
+Examples:
+
+```bash
+python3 scripts/learning_doc_quality_report.py -o /tmp/doc_quality.md
+python3 scripts/learning_doc_quality_report.py --run-label repo-batch-sample --output-json /tmp/doc_quality.json -o /tmp/doc_quality.md
+```
+
+Key options:
+
+- `--batch-id`
+- `--run-label`
+- `--top-targets`
+- `--output-json`
+- `-o/--output`
+
+### `learning_feedback_report.py`
+Builds section-level feedback ranking reports to support iterative section tuning.
+
+Examples:
+
+```bash
+python3 scripts/learning_feedback_report.py -o /tmp/feedback_ranking.md
+python3 scripts/learning_feedback_report.py --min-feedback 3 --output-json /tmp/feedback_ranking.json -o /tmp/feedback_ranking.md
+```
+
+Key options:
+
+- `--min-feedback`
+- `--limit`
+- `--output-json`
+- `-o/--output`
+
 ### `learning_resolve_unknowns.py`
 LLM classifier for unknown normalized titles.
 

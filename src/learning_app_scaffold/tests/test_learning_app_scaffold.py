@@ -10,7 +10,10 @@ from learning_app_scaffold import split_fresh_repo_urls
 from learning_app_scaffold.reporting import fetch_fresh_targets
 from learning_app_scaffold.reporting import fetch_recent_batch_summary
 from learning_app_scaffold.reporting import fetch_recent_failures
+from learning_app_scaffold.reporting import fetch_doc_quality_report
 from learning_app_scaffold.reporting import fetch_section_title_report
+from learning_app_scaffold.reporting import fetch_section_feedback_ranking
+from learning_app_scaffold.reporting import submit_section_feedback
 from learning_app_scaffold.storage import PostgresSnapshotStore
 
 
@@ -977,3 +980,230 @@ def test_learning_loop_service_repo_batch_fanout_uses_multiple_workers():
     assert result.failed == 0
     assert [item.target for item in result.items] == targets
     assert len(fake_api.thread_ids) > 1
+
+
+def test_fetch_doc_quality_report_returns_before_after_deltas(monkeypatch):
+    class _FakeCursor:
+        def __enter__(self):
+            return self
+
+        def __exit__(self, exc_type, exc, tb):
+            return False
+
+        def execute(self, query, params):
+            assert "FROM learning.scan_snapshots AS s" in query
+            assert "previous.rn = 2" in query
+            assert params == ("sample12",)
+
+        def fetchall(self):
+            return [
+                (
+                    "https://github.com/example/a",
+                    5,
+                    "2026-03-16T00:00:00Z",
+                    {
+                        "metadata": {
+                            "scanner_counters": {
+                                "total_variables": 10,
+                                "unresolved_variables": 1,
+                                "ambiguous_variables": 2,
+                                "high_confidence_variables": 7,
+                                "medium_confidence_variables": 2,
+                                "low_confidence_variables": 1,
+                            }
+                        }
+                    },
+                    "2026-03-15T00:00:00Z",
+                    {
+                        "metadata": {
+                            "scanner_counters": {
+                                "total_variables": 10,
+                                "unresolved_variables": 2,
+                                "ambiguous_variables": 3,
+                                "high_confidence_variables": 6,
+                                "medium_confidence_variables": 2,
+                                "low_confidence_variables": 2,
+                            }
+                        }
+                    },
+                ),
+                (
+                    "https://github.com/example/b",
+                    5,
+                    "2026-03-16T00:00:01Z",
+                    {
+                        "metadata": {
+                            "scanner_counters": {
+                                "total_variables": 4,
+                                "unresolved_variables": 1,
+                                "ambiguous_variables": 0,
+                                "high_confidence_variables": 2,
+                                "medium_confidence_variables": 1,
+                                "low_confidence_variables": 1,
+                            }
+                        }
+                    },
+                    None,
+                    None,
+                ),
+            ]
+
+    class _FakeConn:
+        def __enter__(self):
+            return self
+
+        def __exit__(self, exc_type, exc, tb):
+            return False
+
+        def cursor(self):
+            return _FakeCursor()
+
+    fake_psycopg = types.SimpleNamespace(connect=lambda dsn: _FakeConn())
+    monkeypatch.setitem(sys.modules, "psycopg", fake_psycopg)
+
+    report = fetch_doc_quality_report("postgresql://test", run_label="sample12")
+
+    assert report["target_count"] == 2
+    assert report["targets_with_previous"] == 1
+    assert report["trend_counts"] == {
+        "improved": 1,
+        "regressed": 0,
+        "stable": 0,
+        "baseline": 1,
+    }
+
+    first = report["targets"][0]
+    assert first["current"]["resolved_count"] == 9
+    assert first["previous"]["resolved_count"] == 8
+    assert first["delta"]["resolved_count_delta"] == 1
+    assert first["delta"]["ambiguity_count_delta"] == -1
+    assert first["trend"] == "improved"
+
+    second = report["targets"][1]
+    assert second["previous"] is None
+    assert second["delta"]["resolved_count_delta"] is None
+    assert second["trend"] == "baseline"
+
+
+def test_fetch_doc_quality_report_requires_driver(monkeypatch):
+    monkeypatch.delitem(sys.modules, "psycopg", raising=False)
+
+    import builtins
+
+    original_import = builtins.__import__
+
+    def _broken_import(name, *args, **kwargs):
+        if name == "psycopg":
+            raise ImportError("missing")
+        return original_import(name, *args, **kwargs)
+
+    monkeypatch.setattr(builtins, "__import__", _broken_import)
+
+    with pytest.raises(RuntimeError, match="psycopg is required"):
+        fetch_doc_quality_report("postgresql://test")
+
+
+def test_submit_section_feedback_inserts_row(monkeypatch):
+    calls = []
+
+    class _FakeCursor:
+        def __enter__(self):
+            return self
+
+        def __exit__(self, exc_type, exc, tb):
+            return False
+
+        def execute(self, query, params):
+            calls.append((query, params))
+
+    class _FakeConn:
+        def __enter__(self):
+            return self
+
+        def __exit__(self, exc_type, exc, tb):
+            return False
+
+        def cursor(self):
+            return _FakeCursor()
+
+        def commit(self):
+            pass
+
+    fake_psycopg = types.SimpleNamespace(connect=lambda dsn: _FakeConn())
+    monkeypatch.setitem(sys.modules, "psycopg", fake_psycopg)
+
+    submit_section_feedback(
+        "postgresql://test",
+        target="https://github.com/example/a",
+        section_id="requirements",
+        section_quality=5,
+        title_helpfulness=4,
+        content_accuracy=5,
+        notes="solid coverage",
+    )
+
+    assert calls
+    sql, params = calls[0]
+    assert "INSERT INTO learning.section_feedback" in sql
+    assert params[0] == "https://github.com/example/a"
+    assert params[1] == "requirements"
+    assert params[2] == 5
+    assert params[3] == 4
+    assert params[4] == 5
+
+
+def test_fetch_section_feedback_ranking_returns_rows(monkeypatch):
+    class _FakeCursor:
+        def __enter__(self):
+            return self
+
+        def __exit__(self, exc_type, exc, tb):
+            return False
+
+        def execute(self, query, params):
+            assert "FROM learning.section_feedback" in query
+            assert params == (2, 10)
+
+        def fetchall(self):
+            return [
+                (
+                    "requirements",
+                    8,
+                    4.750,
+                    4.500,
+                    4.875,
+                    4.708,
+                    "2026-03-16T00:00:00Z",
+                )
+            ]
+
+    class _FakeConn:
+        def __enter__(self):
+            return self
+
+        def __exit__(self, exc_type, exc, tb):
+            return False
+
+        def cursor(self):
+            return _FakeCursor()
+
+    fake_psycopg = types.SimpleNamespace(connect=lambda dsn: _FakeConn())
+    monkeypatch.setitem(sys.modules, "psycopg", fake_psycopg)
+
+    rows = fetch_section_feedback_ranking(
+        "postgresql://test",
+        min_feedback=2,
+        limit=10,
+    )
+
+    assert rows == [
+        {
+            "section_id": "requirements",
+            "feedback_count": 8,
+            "avg_section_quality": 4.750,
+            "avg_title_helpfulness": 4.500,
+            "avg_content_accuracy": 4.875,
+            "avg_feedback_score": 4.708,
+            "latest_feedback_at": "2026-03-16T00:00:00Z",
+        }
+    ]

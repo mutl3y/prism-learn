@@ -4,7 +4,9 @@ from .batching import load_repo_urls, split_fresh_repo_urls
 from .service import BatchScanResult, LearningLoopService, ScanFailureRecord
 from .service import ScanSnapshot
 from .reporting import fetch_fresh_targets, fetch_recent_batch_summary
+from .reporting import fetch_doc_quality_report
 from .reporting import fetch_recent_failures, fetch_section_title_report
+from .reporting import fetch_section_feedback_ranking, submit_section_feedback
 from .storage import PostgresSnapshotStore, SnapshotJsonlStore
 
 __all__ = [
@@ -20,4 +22,7 @@ __all__ = [
     "fetch_recent_batch_summary",
     "fetch_recent_failures",
     "fetch_section_title_report",
+    "fetch_doc_quality_report",
+    "submit_section_feedback",
+    "fetch_section_feedback_ranking",
 ]
