@@ -20,8 +20,8 @@ Current scope:
 Example:
 
 ```python
-from learning_app_scaffold import LearningLoopService
-from learning_app_scaffold import SnapshotJsonlStore
+from prism_learn import LearningLoopService
+from prism_learn import SnapshotJsonlStore
 
 store = SnapshotJsonlStore("scan_snapshots.jsonl")
 service = LearningLoopService(snapshot_store=store)
@@ -38,8 +38,8 @@ Each persisted row is an append-only JSON document that includes `schema_version
 Batch example:
 
 ```python
-from learning_app_scaffold import LearningLoopService
-from learning_app_scaffold import SnapshotJsonlStore
+from prism_learn import LearningLoopService
+from prism_learn import SnapshotJsonlStore
 
 service = LearningLoopService(snapshot_store=SnapshotJsonlStore("batch.jsonl"))
 result = service.scan_repo_batch(
@@ -58,8 +58,8 @@ Postgres persistence example:
 ```python
 import os
 
-from learning_app_scaffold import LearningLoopService
-from learning_app_scaffold import PostgresSnapshotStore
+from prism_learn import LearningLoopService
+from prism_learn import PostgresSnapshotStore
 
 store = PostgresSnapshotStore(os.environ["DATABASE_URL"])
 service = LearningLoopService(snapshot_store=store)
@@ -105,8 +105,8 @@ Recent-batch summary query:
 ```python
 import os
 
-from learning_app_scaffold import fetch_recent_batch_summary
-from learning_app_scaffold import fetch_recent_failures
+from prism_learn import fetch_recent_batch_summary
+from prism_learn import fetch_recent_failures
 
 rows = fetch_recent_batch_summary(os.environ["DATABASE_URL"], limit=20)
 for row in rows:

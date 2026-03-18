@@ -14,7 +14,7 @@ SRC_ROOT = REPO_ROOT / "src"
 if str(SRC_ROOT) not in sys.path:
     sys.path.insert(0, str(SRC_ROOT))
 
-from learning_app_scaffold import fetch_doc_quality_report  # noqa: E402
+from prism_learn import fetch_doc_quality_report  # noqa: E402
 
 
 def _resolve_dsn() -> str:

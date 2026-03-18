@@ -5,7 +5,7 @@ Batch learning infrastructure for [prism](https://github.com/mutl3y/prism): Post
 
 This package depends on `prism-ansible` for the core role scanner and provides:
 
-- `learning_app_scaffold` — batch orchestration, Postgres snapshot store, and reporting modules
+- `prism_learn` — batch orchestration, Postgres snapshot store, and reporting modules
 - `scripts/` — CLI batch runners for scanning Galaxy role repositories
 - `infra/` — Postgres init SQL and Podman container configuration
 

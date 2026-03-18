@@ -5,16 +5,16 @@ import types
 
 import pytest
 
-from learning_app_scaffold import LearningLoopService, SnapshotJsonlStore
-from learning_app_scaffold import split_fresh_repo_urls
-from learning_app_scaffold.reporting import fetch_fresh_targets
-from learning_app_scaffold.reporting import fetch_recent_batch_summary
-from learning_app_scaffold.reporting import fetch_recent_failures
-from learning_app_scaffold.reporting import fetch_doc_quality_report
-from learning_app_scaffold.reporting import fetch_section_title_report
-from learning_app_scaffold.reporting import fetch_section_feedback_ranking
-from learning_app_scaffold.reporting import submit_section_feedback
-from learning_app_scaffold.storage import PostgresSnapshotStore
+from prism_learn import LearningLoopService, SnapshotJsonlStore
+from prism_learn import split_fresh_repo_urls
+from prism_learn.reporting import fetch_fresh_targets
+from prism_learn.reporting import fetch_recent_batch_summary
+from prism_learn.reporting import fetch_recent_failures
+from prism_learn.reporting import fetch_doc_quality_report
+from prism_learn.reporting import fetch_section_title_report
+from prism_learn.reporting import fetch_section_feedback_ranking
+from prism_learn.reporting import submit_section_feedback
+from prism_learn.storage import PostgresSnapshotStore
 
 
 class _FakeApi:
@@ -661,7 +661,7 @@ def test_fetch_fresh_targets_short_circuits_without_query(monkeypatch):
 
 def test_split_fresh_repo_urls_skips_recent_targets(monkeypatch):
     monkeypatch.setattr(
-        "learning_app_scaffold.batching.fetch_fresh_targets",
+        "prism_learn.batching.fetch_fresh_targets",
         lambda dsn, **kwargs: [
             {
                 "target": "https://github.com/example/a",
@@ -697,7 +697,7 @@ def test_split_fresh_repo_urls_respects_force_rescan(monkeypatch):
     def _fail(*args, **kwargs):
         raise AssertionError("freshness lookup should be bypassed")
 
-    monkeypatch.setattr("learning_app_scaffold.batching.fetch_fresh_targets", _fail)
+    monkeypatch.setattr("prism_learn.batching.fetch_fresh_targets", _fail)
 
     repo_urls_to_scan, skipped_recent = split_fresh_repo_urls(
         "postgresql://test",

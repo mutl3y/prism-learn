@@ -14,12 +14,12 @@ SRC_ROOT = REPO_ROOT / "src"
 if str(SRC_ROOT) not in sys.path:
     sys.path.insert(0, str(SRC_ROOT))
 
-from learning_app_scaffold import LearningLoopService  # noqa: E402
-from learning_app_scaffold import PostgresSnapshotStore  # noqa: E402
-from learning_app_scaffold import fetch_recent_batch_summary  # noqa: E402
-from learning_app_scaffold import fetch_recent_failures  # noqa: E402
-from learning_app_scaffold import load_repo_urls  # noqa: E402
-from learning_app_scaffold import split_fresh_repo_urls  # noqa: E402
+from prism_learn import LearningLoopService  # noqa: E402
+from prism_learn import PostgresSnapshotStore  # noqa: E402
+from prism_learn import fetch_recent_batch_summary  # noqa: E402
+from prism_learn import fetch_recent_failures  # noqa: E402
+from prism_learn import load_repo_urls  # noqa: E402
+from prism_learn import split_fresh_repo_urls  # noqa: E402
 
 
 def _resolve_dsn() -> str:

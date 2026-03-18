@@ -1,5 +1,5 @@
 -- Learning-loop operational schema.
--- Designed to match learning_app_scaffold payload envelopes while preserving
+-- Designed to match prism_learn payload envelopes while preserving
 -- full scanner payload fidelity in JSONB.
 
 CREATE SCHEMA IF NOT EXISTS learning;

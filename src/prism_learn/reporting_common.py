@@ -1,4 +1,4 @@
-"""Shared helpers for learning_app_scaffold reporting modules."""
+"""Shared helpers for prism_learn reporting modules."""
 
 from __future__ import annotations
 

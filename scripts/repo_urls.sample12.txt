@@ -1,4 +1,4 @@
-# 12-repo sample batch for learning_app_scaffold repo scan
+# 12-repo sample batch for prism_learn repo scan
 https://github.com/geerlingguy/prismker
 https://github.com/geerlingguy/ansible-role-nginx
 https://github.com/geerlingguy/ansible-role-apache
