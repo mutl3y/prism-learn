@@ -76,6 +76,30 @@ python scripts/learning_repo_batch.py \
 ## Development
 
 ```bash
-pip install -e .[dev]
+make dev
+tox -e lint
+tox -e pre-commit
+tox
+```
+
+`make dev` creates `.venv`, installs editable dev dependencies, and installs
+local pre-commit hooks.
+
+## Codespaces
+
+This repository includes `.devcontainer/devcontainer.json` so you can open it
+directly in GitHub Codespaces.
+
+After the Codespace is created, dependencies are installed automatically with:
+
+```bash
+python3 -m pip install -e .[dev]
+```
+
+Common checks in Codespaces:
+
+```bash
+tox -e lint
+tox -e pre-commit
 tox
 ```
