@@ -1,7 +1,9 @@
 prism-learn
 ==========
 
+<!-- Codespaces badge disabled for now.
 [![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/mutl3y/prism-learn)
+-->
 
 Batch learning infrastructure for [prism](https://github.com/mutl3y/prism): Postgres-backed role scanning, snapshot storage, and analysis reporting.
 
@@ -87,7 +89,8 @@ tox
 `make dev` creates `.venv`, installs editable dev dependencies, and installs
 local pre-commit hooks.
 
-## Codespaces
+<!--
+## Codespaces (disabled for now)
 
 This repository includes `.devcontainer/devcontainer.json` so you can open it
 directly in GitHub Codespaces.
@@ -105,3 +108,4 @@ tox -e lint
 tox -e pre-commit
 tox
 ```
+-->
