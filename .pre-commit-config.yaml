@@ -1,0 +1,23 @@
+exclude: ^(debug_readmes/|REVIEW_README.*\.md$)
+
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.4.0
+    hooks:
+      - id: trailing-whitespace
+      - id: end-of-file-fixer
+      - id: check-yaml
+
+  - repo: local
+    hooks:
+      - id: black
+        name: black
+        entry: black
+        language: system
+        types: [python]
+
+      - id: ruff
+        name: ruff (auto-fix)
+        entry: ruff check --fix
+        language: system
+        types: [python]

@@ -1,0 +1,28 @@
+.PHONY: venv install dev test lint pre-commit clean
+
+venv:
+	python3 -m venv .venv
+
+install: venv
+	# Ensure the venv's bin directory is first in PATH for these commands
+	PATH=.venv/bin:$$PATH .venv/bin/pip install --upgrade pip
+	PATH=.venv/bin:$$PATH .venv/bin/pip install -e .[dev]
+
+dev: install
+	PATH=.venv/bin:$$PATH .venv/bin/pre-commit install
+	@echo "Development environment installed."
+	@echo "To use the virtualenv in your shell, run: . .venv/bin/activate"
+	@echo "Or prepend it to PATH for one-off commands: export PATH=.venv/bin:$$PATH"
+
+test:
+	. .venv/bin/activate && pytest -q src/prism_learn/tests
+
+lint:
+	. .venv/bin/activate && tox -e lint
+
+pre-commit:
+	. .venv/bin/activate && tox -e pre-commit
+
+clean:
+	rm -rf .venv build dist *.egg-info .tox .pytest_cache
+	rm -f coverage.xml

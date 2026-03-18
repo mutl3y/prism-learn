@@ -5,4 +5,5 @@ pytest
 pytest-cov
 ruff==0.15.6
 black==25.1.0
+pre-commit
 prism-ansible @ git+https://github.com/mutl3y/prism.git@main
