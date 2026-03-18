@@ -1,0 +1,15 @@
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+dist/
+build/
+.eggs/
+.tox/
+.venv/
+venv/
+*.egg
+.coverage
+coverage.xml
+*.log
+.env
