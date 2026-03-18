@@ -1,6 +1,8 @@
 prism-learn
 ==========
 
+[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/mutl3y/prism-learn)
+
 Batch learning infrastructure for [prism](https://github.com/mutl3y/prism): Postgres-backed role scanning, snapshot storage, and analysis reporting.
 
 This package depends on `prism-ansible` for the core role scanner and provides:
