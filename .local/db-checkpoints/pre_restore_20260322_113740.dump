@@ -1,0 +1,672 @@
+--
+-- PostgreSQL database dump
+--
+
+\restrict ZgJEBzZVcgUfA7P7rxjf4UDbArc2BEVrIwNuhnamCJrQ0gJPAGia9KlHyVGMkgS
+
+-- Dumped from database version 16.13 (Debian 16.13-1.pgdg13+1)
+-- Dumped by pg_dump version 16.13 (Debian 16.13-1.pgdg13+1)
+
+SET statement_timeout = 0;
+SET lock_timeout = 0;
+SET idle_in_transaction_session_timeout = 0;
+SET client_encoding = 'UTF8';
+SET standard_conforming_strings = on;
+SELECT pg_catalog.set_config('search_path', '', false);
+SET check_function_bodies = false;
+SET xmloption = content;
+SET client_min_messages = warning;
+SET row_security = off;
+
+--
+-- Name: learning; Type: SCHEMA; Schema: -; Owner: learning_user
+--
+
+CREATE SCHEMA learning;
+
+
+ALTER SCHEMA learning OWNER TO learning_user;
+
+--
+-- Name: pgcrypto; Type: EXTENSION; Schema: -; Owner: -
+--
+
+CREATE EXTENSION IF NOT EXISTS pgcrypto WITH SCHEMA public;
+
+
+--
+-- Name: EXTENSION pgcrypto; Type: COMMENT; Schema: -; Owner: 
+--
+
+COMMENT ON EXTENSION pgcrypto IS 'cryptographic functions';
+
+
+SET default_tablespace = '';
+
+SET default_table_access_method = heap;
+
+--
+-- Name: scan_snapshots; Type: TABLE; Schema: learning; Owner: learning_user
+--
+
+CREATE TABLE learning.scan_snapshots (
+    id bigint NOT NULL,
+    snapshot_uid uuid DEFAULT gen_random_uuid() NOT NULL,
+    schema_version integer NOT NULL,
+    target_type text NOT NULL,
+    target text NOT NULL,
+    captured_at_utc timestamp with time zone NOT NULL,
+    batch_id bigint,
+    scan_payload jsonb NOT NULL,
+    role_name text GENERATED ALWAYS AS (COALESCE((scan_payload ->> 'role_name'::text), ''::text)) STORED,
+    scanner_counters jsonb GENERATED ALWAYS AS (COALESCE((scan_payload #> '{metadata,scanner_counters}'::text[]), '{}'::jsonb)) STORED,
+    created_at timestamp with time zone DEFAULT now() NOT NULL,
+    CONSTRAINT scan_snapshots_target_type_check CHECK ((target_type = ANY (ARRAY['role_path'::text, 'repo_url'::text])))
+);
+
+
+ALTER TABLE learning.scan_snapshots OWNER TO learning_user;
+
+--
+-- Name: latest_snapshot_per_target; Type: VIEW; Schema: learning; Owner: learning_user
+--
+
+CREATE VIEW learning.latest_snapshot_per_target AS
+ SELECT DISTINCT ON (target_type, target) id,
+    snapshot_uid,
+    schema_version,
+    target_type,
+    target,
+    captured_at_utc,
+    batch_id,
+    role_name,
+    scanner_counters,
+    scan_payload
+   FROM learning.scan_snapshots s
+  ORDER BY target_type, target, captured_at_utc DESC;
+
+
+ALTER VIEW learning.latest_snapshot_per_target OWNER TO learning_user;
+
+--
+-- Name: scan_batches; Type: TABLE; Schema: learning; Owner: learning_user
+--
+
+CREATE TABLE learning.scan_batches (
+    id bigint NOT NULL,
+    batch_uid uuid DEFAULT gen_random_uuid() NOT NULL,
+    schema_version integer DEFAULT 1 NOT NULL,
+    target_type text NOT NULL,
+    run_label text,
+    total_targets integer DEFAULT 0 NOT NULL,
+    succeeded_targets integer DEFAULT 0 NOT NULL,
+    failed_targets integer DEFAULT 0 NOT NULL,
+    started_at_utc timestamp with time zone DEFAULT now() NOT NULL,
+    finished_at_utc timestamp with time zone,
+    metadata jsonb DEFAULT '{}'::jsonb NOT NULL,
+    created_at timestamp with time zone DEFAULT now() NOT NULL,
+    CONSTRAINT scan_batches_failed_targets_check CHECK ((failed_targets >= 0)),
+    CONSTRAINT scan_batches_succeeded_targets_check CHECK ((succeeded_targets >= 0)),
+    CONSTRAINT scan_batches_target_type_check CHECK ((target_type = ANY (ARRAY['role_path'::text, 'repo_url'::text]))),
+    CONSTRAINT scan_batches_total_targets_check CHECK ((total_targets >= 0))
+);
+
+
+ALTER TABLE learning.scan_batches OWNER TO learning_user;
+
+--
+-- Name: scan_batches_id_seq; Type: SEQUENCE; Schema: learning; Owner: learning_user
+--
+
+CREATE SEQUENCE learning.scan_batches_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER SEQUENCE learning.scan_batches_id_seq OWNER TO learning_user;
+
+--
+-- Name: scan_batches_id_seq; Type: SEQUENCE OWNED BY; Schema: learning; Owner: learning_user
+--
+
+ALTER SEQUENCE learning.scan_batches_id_seq OWNED BY learning.scan_batches.id;
+
+
+--
+-- Name: scan_failures; Type: TABLE; Schema: learning; Owner: learning_user
+--
+
+CREATE TABLE learning.scan_failures (
+    id bigint NOT NULL,
+    failure_uid uuid DEFAULT gen_random_uuid() NOT NULL,
+    schema_version integer NOT NULL,
+    target_type text NOT NULL,
+    target text NOT NULL,
+    captured_at_utc timestamp with time zone NOT NULL,
+    batch_id bigint,
+    error_type text NOT NULL,
+    error_message text NOT NULL,
+    error_context jsonb DEFAULT '{}'::jsonb NOT NULL,
+    created_at timestamp with time zone DEFAULT now() NOT NULL,
+    CONSTRAINT scan_failures_target_type_check CHECK ((target_type = ANY (ARRAY['role_path'::text, 'repo_url'::text])))
+);
+
+
+ALTER TABLE learning.scan_failures OWNER TO learning_user;
+
+--
+-- Name: scan_failures_id_seq; Type: SEQUENCE; Schema: learning; Owner: learning_user
+--
+
+CREATE SEQUENCE learning.scan_failures_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER SEQUENCE learning.scan_failures_id_seq OWNER TO learning_user;
+
+--
+-- Name: scan_failures_id_seq; Type: SEQUENCE OWNED BY; Schema: learning; Owner: learning_user
+--
+
+ALTER SEQUENCE learning.scan_failures_id_seq OWNED BY learning.scan_failures.id;
+
+
+--
+-- Name: scan_snapshot_sections; Type: TABLE; Schema: learning; Owner: learning_user
+--
+
+CREATE TABLE learning.scan_snapshot_sections (
+    id bigint NOT NULL,
+    snapshot_id bigint NOT NULL,
+    section_index integer NOT NULL,
+    target_type text NOT NULL,
+    target text NOT NULL,
+    captured_at_utc timestamp with time zone NOT NULL,
+    batch_id bigint,
+    raw_section_id text NOT NULL,
+    effective_section_id text NOT NULL,
+    title text NOT NULL,
+    normalized_title text NOT NULL,
+    created_at timestamp with time zone DEFAULT now() NOT NULL,
+    updated_at timestamp with time zone DEFAULT now() NOT NULL
+);
+
+
+ALTER TABLE learning.scan_snapshot_sections OWNER TO learning_user;
+
+--
+-- Name: scan_snapshot_sections_id_seq; Type: SEQUENCE; Schema: learning; Owner: learning_user
+--
+
+CREATE SEQUENCE learning.scan_snapshot_sections_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER SEQUENCE learning.scan_snapshot_sections_id_seq OWNER TO learning_user;
+
+--
+-- Name: scan_snapshot_sections_id_seq; Type: SEQUENCE OWNED BY; Schema: learning; Owner: learning_user
+--
+
+ALTER SEQUENCE learning.scan_snapshot_sections_id_seq OWNED BY learning.scan_snapshot_sections.id;
+
+
+--
+-- Name: scan_snapshots_id_seq; Type: SEQUENCE; Schema: learning; Owner: learning_user
+--
+
+CREATE SEQUENCE learning.scan_snapshots_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER SEQUENCE learning.scan_snapshots_id_seq OWNER TO learning_user;
+
+--
+-- Name: scan_snapshots_id_seq; Type: SEQUENCE OWNED BY; Schema: learning; Owner: learning_user
+--
+
+ALTER SEQUENCE learning.scan_snapshots_id_seq OWNED BY learning.scan_snapshots.id;
+
+
+--
+-- Name: section_display_titles; Type: TABLE; Schema: learning; Owner: learning_user
+--
+
+CREATE TABLE learning.section_display_titles (
+    section_id text NOT NULL,
+    display_title text NOT NULL,
+    updated_at_utc timestamp with time zone DEFAULT now() NOT NULL,
+    CONSTRAINT section_display_titles_display_title_check CHECK ((length(TRIM(BOTH FROM display_title)) > 0)),
+    CONSTRAINT section_display_titles_section_id_check CHECK ((length(TRIM(BOTH FROM section_id)) > 0))
+);
+
+
+ALTER TABLE learning.section_display_titles OWNER TO learning_user;
+
+--
+-- Name: section_feedback; Type: TABLE; Schema: learning; Owner: learning_user
+--
+
+CREATE TABLE learning.section_feedback (
+    id bigint NOT NULL,
+    feedback_uid uuid DEFAULT gen_random_uuid() NOT NULL,
+    target text NOT NULL,
+    section_id text NOT NULL,
+    section_quality smallint NOT NULL,
+    title_helpfulness smallint NOT NULL,
+    content_accuracy smallint NOT NULL,
+    notes text,
+    source text DEFAULT 'manual_review'::text NOT NULL,
+    captured_at_utc timestamp with time zone DEFAULT now() NOT NULL,
+    created_at timestamp with time zone DEFAULT now() NOT NULL,
+    CONSTRAINT section_feedback_content_accuracy_check CHECK (((content_accuracy >= 1) AND (content_accuracy <= 5))),
+    CONSTRAINT section_feedback_section_quality_check CHECK (((section_quality >= 1) AND (section_quality <= 5))),
+    CONSTRAINT section_feedback_title_helpfulness_check CHECK (((title_helpfulness >= 1) AND (title_helpfulness <= 5)))
+);
+
+
+ALTER TABLE learning.section_feedback OWNER TO learning_user;
+
+--
+-- Name: section_feedback_id_seq; Type: SEQUENCE; Schema: learning; Owner: learning_user
+--
+
+CREATE SEQUENCE learning.section_feedback_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER SEQUENCE learning.section_feedback_id_seq OWNER TO learning_user;
+
+--
+-- Name: section_feedback_id_seq; Type: SEQUENCE OWNED BY; Schema: learning; Owner: learning_user
+--
+
+ALTER SEQUENCE learning.section_feedback_id_seq OWNED BY learning.section_feedback.id;
+
+
+--
+-- Name: section_title_aliases; Type: TABLE; Schema: learning; Owner: learning_user
+--
+
+CREATE TABLE learning.section_title_aliases (
+    normalized_title text NOT NULL,
+    section_id text NOT NULL,
+    source text DEFAULT 'manual_review'::text NOT NULL,
+    approved_at_utc timestamp with time zone DEFAULT now() NOT NULL,
+    metadata jsonb DEFAULT '{}'::jsonb NOT NULL,
+    CONSTRAINT section_title_aliases_normalized_title_check CHECK ((length(TRIM(BOTH FROM normalized_title)) > 0)),
+    CONSTRAINT section_title_aliases_section_id_check CHECK ((length(TRIM(BOTH FROM section_id)) > 0))
+);
+
+
+ALTER TABLE learning.section_title_aliases OWNER TO learning_user;
+
+--
+-- Name: scan_batches id; Type: DEFAULT; Schema: learning; Owner: learning_user
+--
+
+ALTER TABLE ONLY learning.scan_batches ALTER COLUMN id SET DEFAULT nextval('learning.scan_batches_id_seq'::regclass);
+
+
+--
+-- Name: scan_failures id; Type: DEFAULT; Schema: learning; Owner: learning_user
+--
+
+ALTER TABLE ONLY learning.scan_failures ALTER COLUMN id SET DEFAULT nextval('learning.scan_failures_id_seq'::regclass);
+
+
+--
+-- Name: scan_snapshot_sections id; Type: DEFAULT; Schema: learning; Owner: learning_user
+--
+
+ALTER TABLE ONLY learning.scan_snapshot_sections ALTER COLUMN id SET DEFAULT nextval('learning.scan_snapshot_sections_id_seq'::regclass);
+
+
+--
+-- Name: scan_snapshots id; Type: DEFAULT; Schema: learning; Owner: learning_user
+--
+
+ALTER TABLE ONLY learning.scan_snapshots ALTER COLUMN id SET DEFAULT nextval('learning.scan_snapshots_id_seq'::regclass);
+
+
+--
+-- Name: section_feedback id; Type: DEFAULT; Schema: learning; Owner: learning_user
+--
+
+ALTER TABLE ONLY learning.section_feedback ALTER COLUMN id SET DEFAULT nextval('learning.section_feedback_id_seq'::regclass);
+
+
+--
+-- Data for Name: scan_batches; Type: TABLE DATA; Schema: learning; Owner: learning_user
+--
+
+COPY learning.scan_batches (id, batch_uid, schema_version, target_type, run_label, total_targets, succeeded_targets, failed_targets, started_at_utc, finished_at_utc, metadata, created_at) FROM stdin;
+\.
+
+
+--
+-- Data for Name: scan_failures; Type: TABLE DATA; Schema: learning; Owner: learning_user
+--
+
+COPY learning.scan_failures (id, failure_uid, schema_version, target_type, target, captured_at_utc, batch_id, error_type, error_message, error_context, created_at) FROM stdin;
+\.
+
+
+--
+-- Data for Name: scan_snapshot_sections; Type: TABLE DATA; Schema: learning; Owner: learning_user
+--
+
+COPY learning.scan_snapshot_sections (id, snapshot_id, section_index, target_type, target, captured_at_utc, batch_id, raw_section_id, effective_section_id, title, normalized_title, created_at, updated_at) FROM stdin;
+\.
+
+
+--
+-- Data for Name: scan_snapshots; Type: TABLE DATA; Schema: learning; Owner: learning_user
+--
+
+COPY learning.scan_snapshots (id, snapshot_uid, schema_version, target_type, target, captured_at_utc, batch_id, scan_payload, created_at) FROM stdin;
+\.
+
+
+--
+-- Data for Name: section_display_titles; Type: TABLE DATA; Schema: learning; Owner: learning_user
+--
+
+COPY learning.section_display_titles (section_id, display_title, updated_at_utc) FROM stdin;
+\.
+
+
+--
+-- Data for Name: section_feedback; Type: TABLE DATA; Schema: learning; Owner: learning_user
+--
+
+COPY learning.section_feedback (id, feedback_uid, target, section_id, section_quality, title_helpfulness, content_accuracy, notes, source, captured_at_utc, created_at) FROM stdin;
+\.
+
+
+--
+-- Data for Name: section_title_aliases; Type: TABLE DATA; Schema: learning; Owner: learning_user
+--
+
+COPY learning.section_title_aliases (normalized_title, section_id, source, approved_at_utc, metadata) FROM stdin;
+\.
+
+
+--
+-- Name: scan_batches_id_seq; Type: SEQUENCE SET; Schema: learning; Owner: learning_user
+--
+
+SELECT pg_catalog.setval('learning.scan_batches_id_seq', 1, false);
+
+
+--
+-- Name: scan_failures_id_seq; Type: SEQUENCE SET; Schema: learning; Owner: learning_user
+--
+
+SELECT pg_catalog.setval('learning.scan_failures_id_seq', 1, false);
+
+
+--
+-- Name: scan_snapshot_sections_id_seq; Type: SEQUENCE SET; Schema: learning; Owner: learning_user
+--
+
+SELECT pg_catalog.setval('learning.scan_snapshot_sections_id_seq', 1, false);
+
+
+--
+-- Name: scan_snapshots_id_seq; Type: SEQUENCE SET; Schema: learning; Owner: learning_user
+--
+
+SELECT pg_catalog.setval('learning.scan_snapshots_id_seq', 1, false);
+
+
+--
+-- Name: section_feedback_id_seq; Type: SEQUENCE SET; Schema: learning; Owner: learning_user
+--
+
+SELECT pg_catalog.setval('learning.section_feedback_id_seq', 1, false);
+
+
+--
+-- Name: scan_batches scan_batches_batch_uid_key; Type: CONSTRAINT; Schema: learning; Owner: learning_user
+--
+
+ALTER TABLE ONLY learning.scan_batches
+    ADD CONSTRAINT scan_batches_batch_uid_key UNIQUE (batch_uid);
+
+
+--
+-- Name: scan_batches scan_batches_pkey; Type: CONSTRAINT; Schema: learning; Owner: learning_user
+--
+
+ALTER TABLE ONLY learning.scan_batches
+    ADD CONSTRAINT scan_batches_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: scan_failures scan_failures_failure_uid_key; Type: CONSTRAINT; Schema: learning; Owner: learning_user
+--
+
+ALTER TABLE ONLY learning.scan_failures
+    ADD CONSTRAINT scan_failures_failure_uid_key UNIQUE (failure_uid);
+
+
+--
+-- Name: scan_failures scan_failures_pkey; Type: CONSTRAINT; Schema: learning; Owner: learning_user
+--
+
+ALTER TABLE ONLY learning.scan_failures
+    ADD CONSTRAINT scan_failures_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: scan_snapshot_sections scan_snapshot_sections_pkey; Type: CONSTRAINT; Schema: learning; Owner: learning_user
+--
+
+ALTER TABLE ONLY learning.scan_snapshot_sections
+    ADD CONSTRAINT scan_snapshot_sections_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: scan_snapshot_sections scan_snapshot_sections_snapshot_id_section_index_key; Type: CONSTRAINT; Schema: learning; Owner: learning_user
+--
+
+ALTER TABLE ONLY learning.scan_snapshot_sections
+    ADD CONSTRAINT scan_snapshot_sections_snapshot_id_section_index_key UNIQUE (snapshot_id, section_index);
+
+
+--
+-- Name: scan_snapshots scan_snapshots_pkey; Type: CONSTRAINT; Schema: learning; Owner: learning_user
+--
+
+ALTER TABLE ONLY learning.scan_snapshots
+    ADD CONSTRAINT scan_snapshots_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: scan_snapshots scan_snapshots_snapshot_uid_key; Type: CONSTRAINT; Schema: learning; Owner: learning_user
+--
+
+ALTER TABLE ONLY learning.scan_snapshots
+    ADD CONSTRAINT scan_snapshots_snapshot_uid_key UNIQUE (snapshot_uid);
+
+
+--
+-- Name: section_display_titles section_display_titles_pkey; Type: CONSTRAINT; Schema: learning; Owner: learning_user
+--
+
+ALTER TABLE ONLY learning.section_display_titles
+    ADD CONSTRAINT section_display_titles_pkey PRIMARY KEY (section_id);
+
+
+--
+-- Name: section_feedback section_feedback_feedback_uid_key; Type: CONSTRAINT; Schema: learning; Owner: learning_user
+--
+
+ALTER TABLE ONLY learning.section_feedback
+    ADD CONSTRAINT section_feedback_feedback_uid_key UNIQUE (feedback_uid);
+
+
+--
+-- Name: section_feedback section_feedback_pkey; Type: CONSTRAINT; Schema: learning; Owner: learning_user
+--
+
+ALTER TABLE ONLY learning.section_feedback
+    ADD CONSTRAINT section_feedback_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: section_title_aliases section_title_aliases_pkey; Type: CONSTRAINT; Schema: learning; Owner: learning_user
+--
+
+ALTER TABLE ONLY learning.section_title_aliases
+    ADD CONSTRAINT section_title_aliases_pkey PRIMARY KEY (normalized_title);
+
+
+--
+-- Name: idx_scan_batches_started_at; Type: INDEX; Schema: learning; Owner: learning_user
+--
+
+CREATE INDEX idx_scan_batches_started_at ON learning.scan_batches USING btree (started_at_utc DESC);
+
+
+--
+-- Name: idx_scan_failures_captured_at; Type: INDEX; Schema: learning; Owner: learning_user
+--
+
+CREATE INDEX idx_scan_failures_captured_at ON learning.scan_failures USING btree (captured_at_utc DESC);
+
+
+--
+-- Name: idx_scan_failures_target; Type: INDEX; Schema: learning; Owner: learning_user
+--
+
+CREATE INDEX idx_scan_failures_target ON learning.scan_failures USING btree (target_type, target, captured_at_utc DESC);
+
+
+--
+-- Name: idx_scan_snapshots_captured_at; Type: INDEX; Schema: learning; Owner: learning_user
+--
+
+CREATE INDEX idx_scan_snapshots_captured_at ON learning.scan_snapshots USING btree (captured_at_utc DESC);
+
+
+--
+-- Name: idx_scan_snapshots_payload_gin; Type: INDEX; Schema: learning; Owner: learning_user
+--
+
+CREATE INDEX idx_scan_snapshots_payload_gin ON learning.scan_snapshots USING gin (scan_payload);
+
+
+--
+-- Name: idx_scan_snapshots_role_name; Type: INDEX; Schema: learning; Owner: learning_user
+--
+
+CREATE INDEX idx_scan_snapshots_role_name ON learning.scan_snapshots USING btree (role_name);
+
+
+--
+-- Name: idx_scan_snapshots_target; Type: INDEX; Schema: learning; Owner: learning_user
+--
+
+CREATE INDEX idx_scan_snapshots_target ON learning.scan_snapshots USING btree (target_type, target, captured_at_utc DESC);
+
+
+--
+-- Name: idx_section_aliases_section_id; Type: INDEX; Schema: learning; Owner: learning_user
+--
+
+CREATE INDEX idx_section_aliases_section_id ON learning.section_title_aliases USING btree (section_id);
+
+
+--
+-- Name: idx_section_feedback_section; Type: INDEX; Schema: learning; Owner: learning_user
+--
+
+CREATE INDEX idx_section_feedback_section ON learning.section_feedback USING btree (section_id, captured_at_utc DESC);
+
+
+--
+-- Name: idx_section_feedback_target; Type: INDEX; Schema: learning; Owner: learning_user
+--
+
+CREATE INDEX idx_section_feedback_target ON learning.section_feedback USING btree (target, captured_at_utc DESC);
+
+
+--
+-- Name: idx_snapshot_sections_effective_section; Type: INDEX; Schema: learning; Owner: learning_user
+--
+
+CREATE INDEX idx_snapshot_sections_effective_section ON learning.scan_snapshot_sections USING btree (effective_section_id);
+
+
+--
+-- Name: idx_snapshot_sections_normalized_title; Type: INDEX; Schema: learning; Owner: learning_user
+--
+
+CREATE INDEX idx_snapshot_sections_normalized_title ON learning.scan_snapshot_sections USING btree (normalized_title);
+
+
+--
+-- Name: idx_snapshot_sections_snapshot; Type: INDEX; Schema: learning; Owner: learning_user
+--
+
+CREATE INDEX idx_snapshot_sections_snapshot ON learning.scan_snapshot_sections USING btree (snapshot_id);
+
+
+--
+-- Name: idx_snapshot_sections_target; Type: INDEX; Schema: learning; Owner: learning_user
+--
+
+CREATE INDEX idx_snapshot_sections_target ON learning.scan_snapshot_sections USING btree (target_type, target, captured_at_utc DESC);
+
+
+--
+-- Name: scan_failures scan_failures_batch_id_fkey; Type: FK CONSTRAINT; Schema: learning; Owner: learning_user
+--
+
+ALTER TABLE ONLY learning.scan_failures
+    ADD CONSTRAINT scan_failures_batch_id_fkey FOREIGN KEY (batch_id) REFERENCES learning.scan_batches(id) ON DELETE SET NULL;
+
+
+--
+-- Name: scan_snapshot_sections scan_snapshot_sections_snapshot_id_fkey; Type: FK CONSTRAINT; Schema: learning; Owner: learning_user
+--
+
+ALTER TABLE ONLY learning.scan_snapshot_sections
+    ADD CONSTRAINT scan_snapshot_sections_snapshot_id_fkey FOREIGN KEY (snapshot_id) REFERENCES learning.scan_snapshots(id) ON DELETE CASCADE;
+
+
+--
+-- Name: scan_snapshots scan_snapshots_batch_id_fkey; Type: FK CONSTRAINT; Schema: learning; Owner: learning_user
+--
+
+ALTER TABLE ONLY learning.scan_snapshots
+    ADD CONSTRAINT scan_snapshots_batch_id_fkey FOREIGN KEY (batch_id) REFERENCES learning.scan_batches(id) ON DELETE SET NULL;
+
+
+--
+-- PostgreSQL database dump complete
+--
+
+\unrestrict ZgJEBzZVcgUfA7P7rxjf4UDbArc2BEVrIwNuhnamCJrQ0gJPAGia9KlHyVGMkgS
+

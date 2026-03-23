@@ -31,5 +31,7 @@ def coerce_json_document(value: Any) -> dict[str, Any]:
 
 def normalize_style_heading(heading: str) -> str:
     """Normalize heading text to a stable comparison key."""
-    normalized = re.sub(r"[^a-z0-9()]+", " ", heading.lower()).strip()
+    # Strip markdown inline links so `[Title](#anchor)` normalizes like `Title`.
+    cleaned = re.sub(r"\[([^\]]+)\]\([^)]*\)", r"\1", heading)
+    normalized = re.sub(r"[^a-z0-9()]+", " ", cleaned.lower()).strip()
     return re.sub(r"\s+", " ", normalized)

@@ -906,7 +906,10 @@ def test_fetch_section_title_report_falls_back_to_stored_sections(monkeypatch):
                     None,
                     [
                         {"id": "role_variables", "title": "Role Variables"},
-                        {"id": "unknown", "title": "Supported platforms"},
+                        {
+                            "id": "unknown",
+                            "title": "[Supported platforms](#supported-platforms)",
+                        },
                     ],
                 )
             ]
@@ -991,8 +994,8 @@ def test_fetch_doc_quality_report_returns_before_after_deltas(monkeypatch):
             return False
 
         def execute(self, query, params):
-            assert "FROM learning.scan_snapshots AS s" in query
-            assert "previous.rn = 2" in query
+            assert "WITH all_snapshots AS" in query
+            assert "LEFT JOIN LATERAL" in query
             assert params == ("sample12",)
 
         def fetchall(self):

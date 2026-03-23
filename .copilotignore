@@ -1,0 +1,60 @@
+# Ignore node/yarn/npm installs and builds
+node_modules/
+dist/
+build/
+coverage/
+
+# Ignore Python virtual envs, caches, and build artifacts
+venv/
+.env
+__pycache__/
+*.pyc
+*.pyo
+*.egg-info/
+
+# Ignore IDE/editor config and workspace files
+.vscode/
+.idea/
+*.sublime-*
+
+# Ignore large data, binaries, and generated assets
+data/
+datasets/
+*.bin
+*.db
+*.sqlite
+assets/generated/
+
+# Ignore logs and temporary files
+*.log
+tmp/
+temp/
+
+# Ignore test output and docs build
+reports/
+htmlcov/
+docs/_build/
+
+# Explicit files (examples)
+secret_keys.json
+large_blob.tar.gz
+
+.tox/
+.venv/
+.env/
+pycache/
+*.pyc
+*.pyoRuff.ruff_cache/
+.ruff_cache
+build/
+coverage/
+htmlcov/
+.local/
+.idea/
+.vscode/
+*.log
+*.tmp
+*.bak
+*.swp
+*.swo
+*.swn

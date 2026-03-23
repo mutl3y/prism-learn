@@ -97,49 +97,71 @@ def fetch_doc_quality_report(
     """Return before/after document quality metrics from persisted snapshots."""
     psycopg = require_psycopg()
 
-    filters: list[str] = [
-        "(s.scan_payload->'metadata'->'scanner_counters') IS NOT NULL",
-    ]
+    current_filters: list[str] = ["TRUE"]
     params: list[Any] = []
 
     if batch_id is not None:
-        filters.append("s.batch_id = %s")
+        current_filters.append("a.batch_id = %s")
         params.append(batch_id)
 
     if run_label is not None:
-        filters.append("b.run_label = %s")
+        current_filters.append("a.run_label = %s")
         params.append(run_label)
 
-    where_clause = " AND ".join(filters)
+    current_where_clause = " AND ".join(current_filters)
     sql = f"""
-        WITH ranked AS (
+        WITH all_snapshots AS (
             SELECT
                 s.id,
                 s.target,
                 s.batch_id,
                 s.captured_at_utc,
                 s.scan_payload,
-                ROW_NUMBER() OVER (
-                    PARTITION BY s.target
-                    ORDER BY s.captured_at_utc DESC, s.id DESC
-                ) AS rn
+                b.run_label
             FROM learning.scan_snapshots AS s
             LEFT JOIN learning.scan_batches AS b ON b.id = s.batch_id
-            WHERE {where_clause}
+            WHERE (s.scan_payload->'metadata'->'scanner_counters') IS NOT NULL
+        ),
+        current_ranked AS (
+            SELECT
+                a.id,
+                a.target,
+                a.batch_id,
+                a.captured_at_utc,
+                a.scan_payload,
+                ROW_NUMBER() OVER (
+                    PARTITION BY a.target
+                    ORDER BY a.captured_at_utc DESC, a.id DESC
+                ) AS rn
+            FROM all_snapshots AS a
+            WHERE {current_where_clause}
         )
         SELECT
-            latest.target,
-            latest.batch_id,
-            latest.captured_at_utc,
-            latest.scan_payload,
+            current.target,
+            current.batch_id,
+            current.captured_at_utc,
+            current.scan_payload,
             previous.captured_at_utc,
             previous.scan_payload
-        FROM ranked AS latest
-        LEFT JOIN ranked AS previous
-          ON previous.target = latest.target
-         AND previous.rn = 2
-        WHERE latest.rn = 1
-        ORDER BY latest.captured_at_utc DESC, latest.target ASC
+        FROM current_ranked AS current
+        LEFT JOIN LATERAL (
+            SELECT
+                prior.captured_at_utc,
+                prior.scan_payload
+            FROM all_snapshots AS prior
+            WHERE prior.target = current.target
+              AND (
+                    prior.captured_at_utc < current.captured_at_utc
+                    OR (
+                        prior.captured_at_utc = current.captured_at_utc
+                        AND prior.id < current.id
+                    )
+                  )
+            ORDER BY prior.captured_at_utc DESC, prior.id DESC
+            LIMIT 1
+        ) AS previous ON TRUE
+        WHERE current.rn = 1
+        ORDER BY current.captured_at_utc DESC, current.target ASC
     """
 
     with psycopg.connect(dsn) as conn:

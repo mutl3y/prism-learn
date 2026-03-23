@@ -1,0 +1,716 @@
+{
+  "selection": {
+    "batch_id": null,
+    "run_label": "roles25-refresh-20260322",
+    "latest_per_target": true,
+    "source": "raw"
+  },
+  "snapshot_count": 25,
+  "distinct_targets": 25,
+  "total_sections": 153,
+  "known_sections": 130,
+  "unknown_sections": 23,
+  "sections": [
+    {
+      "section_id": "requirements",
+      "known": true,
+      "count": 43,
+      "snapshot_count": 25,
+      "distinct_targets": 25,
+      "sample_targets": [
+        "https://github.com/PrathimaPatthipati/dummy-role",
+        "https://github.com/PrymalInstynct/ansible_auditd",
+        "https://github.com/Splorgle/ansible-role-wireguard",
+        "https://github.com/bertvv/ansible-role-bind",
+        "https://github.com/csakaszamok/ansible-role-rke2-after"
+      ],
+      "titles": [
+        {
+          "title": "Requirements",
+          "count": 23
+        },
+        {
+          "title": "Dependencies",
+          "count": 19
+        },
+        {
+          "title": "Requirements & Dependencies",
+          "count": 1
+        }
+      ],
+      "normalized_titles": [
+        {
+          "title": "requirements",
+          "count": 23
+        },
+        {
+          "title": "dependencies",
+          "count": 19
+        },
+        {
+          "title": "requirements dependencies",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "section_id": "license",
+      "known": true,
+      "count": 23,
+      "snapshot_count": 23,
+      "distinct_targets": 23,
+      "sample_targets": [
+        "https://github.com/PrathimaPatthipati/dummy-role",
+        "https://github.com/PrymalInstynct/ansible_auditd",
+        "https://github.com/Splorgle/ansible-role-wireguard",
+        "https://github.com/bertvv/ansible-role-bind",
+        "https://github.com/geerlingguy/ansible-role-apache"
+      ],
+      "titles": [
+        {
+          "title": "License",
+          "count": 23
+        }
+      ],
+      "normalized_titles": [
+        {
+          "title": "license",
+          "count": 23
+        }
+      ]
+    },
+    {
+      "section_id": "unknown",
+      "known": false,
+      "count": 23,
+      "snapshot_count": 10,
+      "distinct_targets": 10,
+      "sample_targets": [
+        "https://github.com/PrymalInstynct/ansible_auditd",
+        "https://github.com/Splorgle/ansible-role-wireguard",
+        "https://github.com/bertvv/ansible-role-bind",
+        "https://github.com/csakaszamok/ansible-role-rke2-after",
+        "https://github.com/geerlingguy/ansible-role-java"
+      ],
+      "titles": [
+        {
+          "title": "Role Arguments",
+          "count": 5
+        },
+        {
+          "title": "Author and Project Information",
+          "count": 5
+        },
+        {
+          "title": "Continuous integration",
+          "count": 1
+        },
+        {
+          "title": "Troubleshooting & Known issues",
+          "count": 1
+        },
+        {
+          "title": "References",
+          "count": 1
+        },
+        {
+          "title": "Example Playbook (using default package)",
+          "count": 1
+        },
+        {
+          "title": "Supported platforms",
+          "count": 1
+        },
+        {
+          "title": "Example Playbooks",
+          "count": 1
+        },
+        {
+          "title": "Contributors",
+          "count": 1
+        },
+        {
+          "title": "Role Capabilities",
+          "count": 1
+        },
+        {
+          "title": "Client and server mode",
+          "count": 1
+        }
+      ],
+      "normalized_titles": [
+        {
+          "title": "role arguments",
+          "count": 5
+        },
+        {
+          "title": "author and project information",
+          "count": 5
+        },
+        {
+          "title": "continuous integration",
+          "count": 1
+        },
+        {
+          "title": "troubleshooting known issues",
+          "count": 1
+        },
+        {
+          "title": "references",
+          "count": 1
+        },
+        {
+          "title": "example playbook (using default package)",
+          "count": 1
+        },
+        {
+          "title": "supported platforms",
+          "count": 1
+        },
+        {
+          "title": "example playbooks",
+          "count": 1
+        },
+        {
+          "title": "contributors",
+          "count": 1
+        },
+        {
+          "title": "role capabilities",
+          "count": 1
+        },
+        {
+          "title": "client and server mode",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "section_id": "example_usage",
+      "known": true,
+      "count": 18,
+      "snapshot_count": 18,
+      "distinct_targets": 18,
+      "sample_targets": [
+        "https://github.com/PrathimaPatthipati/dummy-role",
+        "https://github.com/PrymalInstynct/ansible_auditd",
+        "https://github.com/Splorgle/ansible-role-wireguard",
+        "https://github.com/dev-sec/ansible-ssh-hardening",
+        "https://github.com/geerlingguy/ansible-role-apache"
+      ],
+      "titles": [
+        {
+          "title": "Example Playbook",
+          "count": 16
+        },
+        {
+          "title": "Example Playbook (install OpenJDK 8)",
+          "count": 1
+        },
+        {
+          "title": "Usage",
+          "count": 1
+        }
+      ],
+      "normalized_titles": [
+        {
+          "title": "example playbook",
+          "count": 16
+        },
+        {
+          "title": "example playbook (install openjdk 8)",
+          "count": 1
+        },
+        {
+          "title": "usage",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "section_id": "role_variables",
+      "known": true,
+      "count": 18,
+      "snapshot_count": 18,
+      "distinct_targets": 18,
+      "sample_targets": [
+        "https://github.com/PrathimaPatthipati/dummy-role",
+        "https://github.com/PrymalInstynct/ansible_auditd",
+        "https://github.com/Splorgle/ansible-role-wireguard",
+        "https://github.com/bertvv/ansible-role-bind",
+        "https://github.com/dev-sec/ansible-ssh-hardening"
+      ],
+      "titles": [
+        {
+          "title": "Role Variables",
+          "count": 15
+        },
+        {
+          "title": "Variables",
+          "count": 3
+        }
+      ],
+      "normalized_titles": [
+        {
+          "title": "role variables",
+          "count": 15
+        },
+        {
+          "title": "variables",
+          "count": 3
+        }
+      ]
+    },
+    {
+      "section_id": "author_information",
+      "known": true,
+      "count": 15,
+      "snapshot_count": 15,
+      "distinct_targets": 15,
+      "sample_targets": [
+        "https://github.com/PrathimaPatthipati/dummy-role",
+        "https://github.com/Splorgle/ansible-role-wireguard",
+        "https://github.com/geerlingguy/ansible-role-apache",
+        "https://github.com/geerlingguy/ansible-role-java",
+        "https://github.com/geerlingguy/ansible-role-mysql"
+      ],
+      "titles": [
+        {
+          "title": "Author Information",
+          "count": 15
+        }
+      ],
+      "normalized_titles": [
+        {
+          "title": "author information",
+          "count": 15
+        }
+      ]
+    },
+    {
+      "section_id": "local_testing",
+      "known": true,
+      "count": 3,
+      "snapshot_count": 3,
+      "distinct_targets": 3,
+      "sample_targets": [
+        "https://github.com/bertvv/ansible-role-bind",
+        "https://github.com/dev-sec/ansible-ssh-hardening",
+        "https://github.com/weareinteractive/ansible-ssh"
+      ],
+      "titles": [
+        {
+          "title": "Testing",
+          "count": 2
+        },
+        {
+          "title": "Local Testing",
+          "count": 1
+        }
+      ],
+      "normalized_titles": [
+        {
+          "title": "testing",
+          "count": 2
+        },
+        {
+          "title": "local testing",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "section_id": "contributing",
+      "known": true,
+      "count": 2,
+      "snapshot_count": 2,
+      "distinct_targets": 2,
+      "sample_targets": [
+        "https://github.com/dev-sec/ansible-ssh-hardening",
+        "https://github.com/weareinteractive/ansible-ssh"
+      ],
+      "titles": [
+        {
+          "title": "Contributing",
+          "count": 2
+        }
+      ],
+      "normalized_titles": [
+        {
+          "title": "contributing",
+          "count": 2
+        }
+      ]
+    },
+    {
+      "section_id": "variable_guidance",
+      "known": true,
+      "count": 2,
+      "snapshot_count": 1,
+      "distinct_targets": 1,
+      "sample_targets": [
+        "https://github.com/dev-sec/ansible-ssh-hardening"
+      ],
+      "titles": [
+        {
+          "title": "Configuring settings not listed in role-variables",
+          "count": 1
+        },
+        {
+          "title": "Changing the default port and idempotency",
+          "count": 1
+        }
+      ],
+      "normalized_titles": [
+        {
+          "title": "configuring settings not listed in role variables",
+          "count": 1
+        },
+        {
+          "title": "changing the default port and idempotency",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "section_id": "basic_authorization",
+      "known": true,
+      "count": 1,
+      "snapshot_count": 1,
+      "distinct_targets": 1,
+      "sample_targets": [
+        "https://github.com/geerlingguy/ansible-role-apache"
+      ],
+      "titles": [
+        {
+          "title": ".htaccess-based Basic Authorization",
+          "count": 1
+        }
+      ],
+      "normalized_titles": [
+        {
+          "title": "htaccess based basic authorization",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "section_id": "faq_pitfalls",
+      "known": true,
+      "count": 1,
+      "snapshot_count": 1,
+      "distinct_targets": 1,
+      "sample_targets": [
+        "https://github.com/dev-sec/ansible-ssh-hardening"
+      ],
+      "titles": [
+        {
+          "title": "FAQ / Pitfalls",
+          "count": 1
+        }
+      ],
+      "normalized_titles": [
+        {
+          "title": "faq pitfalls",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "section_id": "handlers",
+      "known": true,
+      "count": 1,
+      "snapshot_count": 1,
+      "distinct_targets": 1,
+      "sample_targets": [
+        "https://github.com/weareinteractive/ansible-ssh"
+      ],
+      "titles": [
+        {
+          "title": "Handlers",
+          "count": 1
+        }
+      ],
+      "normalized_titles": [
+        {
+          "title": "handlers",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "section_id": "installation",
+      "known": true,
+      "count": 1,
+      "snapshot_count": 1,
+      "distinct_targets": 1,
+      "sample_targets": [
+        "https://github.com/weareinteractive/ansible-ssh"
+      ],
+      "titles": [
+        {
+          "title": "Installation",
+          "count": 1
+        }
+      ],
+      "normalized_titles": [
+        {
+          "title": "installation",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "section_id": "license_author",
+      "known": true,
+      "count": 1,
+      "snapshot_count": 1,
+      "distinct_targets": 1,
+      "sample_targets": [
+        "https://github.com/dev-sec/ansible-ssh-hardening"
+      ],
+      "titles": [
+        {
+          "title": "License and Author",
+          "count": 1
+        }
+      ],
+      "normalized_titles": [
+        {
+          "title": "license and author",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "section_id": "template_overrides",
+      "known": true,
+      "count": 1,
+      "snapshot_count": 1,
+      "distinct_targets": 1,
+      "sample_targets": [
+        "https://github.com/geerlingguy/ansible-role-nginx"
+      ],
+      "titles": [
+        {
+          "title": "Overriding configuration templates",
+          "count": 1
+        }
+      ],
+      "normalized_titles": [
+        {
+          "title": "overriding configuration templates",
+          "count": 1
+        }
+      ]
+    }
+  ],
+  "unknown_titles": [
+    {
+      "normalized_title": "author and project information",
+      "count": 5,
+      "distinct_targets": 5,
+      "sample_targets": [
+        "https://github.com/trippsc2/ansible-role-create_testing_ad_domain",
+        "https://github.com/trippsc2/ansible-role-generate_csr",
+        "https://github.com/trippsc2/ansible-role-join_testing_ad_domain",
+        "https://github.com/trippsc2/ansible-role-ubuntu_first_steps",
+        "https://github.com/trippsc2/ansible-role-ubuntu_seal_for_template"
+      ],
+      "batch_ids": [
+        8
+      ],
+      "latest_seen_at": "2026-03-22 12:07:06+00:00",
+      "titles": [
+        {
+          "title": "Author and Project Information",
+          "count": 5
+        }
+      ]
+    },
+    {
+      "normalized_title": "role arguments",
+      "count": 5,
+      "distinct_targets": 5,
+      "sample_targets": [
+        "https://github.com/trippsc2/ansible-role-create_testing_ad_domain",
+        "https://github.com/trippsc2/ansible-role-generate_csr",
+        "https://github.com/trippsc2/ansible-role-join_testing_ad_domain",
+        "https://github.com/trippsc2/ansible-role-ubuntu_first_steps",
+        "https://github.com/trippsc2/ansible-role-ubuntu_seal_for_template"
+      ],
+      "batch_ids": [
+        8
+      ],
+      "latest_seen_at": "2026-03-22 12:07:06+00:00",
+      "titles": [
+        {
+          "title": "Role Arguments",
+          "count": 5
+        }
+      ]
+    },
+    {
+      "normalized_title": "client and server mode",
+      "count": 1,
+      "distinct_targets": 1,
+      "sample_targets": [
+        "https://github.com/Splorgle/ansible-role-wireguard"
+      ],
+      "batch_ids": [
+        8
+      ],
+      "latest_seen_at": "2026-03-22 12:07:06+00:00",
+      "titles": [
+        {
+          "title": "Client and server mode",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "normalized_title": "continuous integration",
+      "count": 1,
+      "distinct_targets": 1,
+      "sample_targets": [
+        "https://github.com/PrymalInstynct/ansible_auditd"
+      ],
+      "batch_ids": [
+        8
+      ],
+      "latest_seen_at": "2026-03-22 12:07:11+00:00",
+      "titles": [
+        {
+          "title": "Continuous integration",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "normalized_title": "contributors",
+      "count": 1,
+      "distinct_targets": 1,
+      "sample_targets": [
+        "https://github.com/bertvv/ansible-role-bind"
+      ],
+      "batch_ids": [
+        8
+      ],
+      "latest_seen_at": "2026-03-22 12:07:07+00:00",
+      "titles": [
+        {
+          "title": "Contributors",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "normalized_title": "example playbook (using default package)",
+      "count": 1,
+      "distinct_targets": 1,
+      "sample_targets": [
+        "https://github.com/geerlingguy/ansible-role-java"
+      ],
+      "batch_ids": [
+        8
+      ],
+      "latest_seen_at": "2026-03-22 12:07:09+00:00",
+      "titles": [
+        {
+          "title": "Example Playbook (using default package)",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "normalized_title": "example playbooks",
+      "count": 1,
+      "distinct_targets": 1,
+      "sample_targets": [
+        "https://github.com/bertvv/ansible-role-bind"
+      ],
+      "batch_ids": [
+        8
+      ],
+      "latest_seen_at": "2026-03-22 12:07:07+00:00",
+      "titles": [
+        {
+          "title": "Example Playbooks",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "normalized_title": "references",
+      "count": 1,
+      "distinct_targets": 1,
+      "sample_targets": [
+        "https://github.com/PrymalInstynct/ansible_auditd"
+      ],
+      "batch_ids": [
+        8
+      ],
+      "latest_seen_at": "2026-03-22 12:07:11+00:00",
+      "titles": [
+        {
+          "title": "References",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "normalized_title": "role capabilities",
+      "count": 1,
+      "distinct_targets": 1,
+      "sample_targets": [
+        "https://github.com/csakaszamok/ansible-role-rke2-after"
+      ],
+      "batch_ids": [
+        8
+      ],
+      "latest_seen_at": "2026-03-22 12:07:06+00:00",
+      "titles": [
+        {
+          "title": "Role Capabilities",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "normalized_title": "supported platforms",
+      "count": 1,
+      "distinct_targets": 1,
+      "sample_targets": [
+        "https://github.com/bertvv/ansible-role-bind"
+      ],
+      "batch_ids": [
+        8
+      ],
+      "latest_seen_at": "2026-03-22 12:07:07+00:00",
+      "titles": [
+        {
+          "title": "Supported platforms",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "normalized_title": "troubleshooting known issues",
+      "count": 1,
+      "distinct_targets": 1,
+      "sample_targets": [
+        "https://github.com/PrymalInstynct/ansible_auditd"
+      ],
+      "batch_ids": [
+        8
+      ],
+      "latest_seen_at": "2026-03-22 12:07:11+00:00",
+      "titles": [
+        {
+          "title": "Troubleshooting & Known issues",
+          "count": 1
+        }
+      ]
+    }
+  ]
+}

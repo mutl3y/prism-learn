@@ -742,8 +742,8 @@ def _build_parser() -> argparse.ArgumentParser:
     review.add_argument("--batch-size", type=int, default=100)
     review.add_argument("--rpm", type=int, default=15)
     review.add_argument("--model", default=os.getenv("OPENAI_MODEL", "gpt-4o-mini"))
-    review.add_argument("--output-yaml", default="/tmp/candidates.yml")
-    review.add_argument("--output-report", default="/tmp/review.md")
+    review.add_argument("--output-yaml", default=".local/tmp/candidates.yml")
+    review.add_argument("--output-report", default=".local/tmp/review.md")
 
     apply_cmd = sub.add_parser(
         "apply", help="Apply YAML aliases to Postgres and optionally rematerialize"

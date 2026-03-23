@@ -1,0 +1,1417 @@
+{
+  "selection": {
+    "batch_id": null,
+    "run_label": "roles25-refresh-20260322-candidate5",
+    "latest_per_target": true
+  },
+  "target_count": 50,
+  "targets_with_previous": 50,
+  "trend_counts": {
+    "improved": 0,
+    "regressed": 0,
+    "stable": 50,
+    "baseline": 0
+  },
+  "targets": [
+    {
+      "target": "https://github.com/bluepantsdev/role-flightaware",
+      "batch_id": 16,
+      "captured_at_utc": "2026-03-22 22:59:36+00:00",
+      "previous_captured_at_utc": "2026-03-22 22:59:29+00:00",
+      "current": {
+        "variable_count": 0,
+        "resolved_count": 0,
+        "unresolved_count": 0,
+        "ambiguity_count": 0,
+        "confidence_avg": null
+      },
+      "previous": {
+        "variable_count": 0,
+        "resolved_count": 0,
+        "unresolved_count": 0,
+        "ambiguity_count": 0,
+        "confidence_avg": null
+      },
+      "delta": {
+        "variable_count_delta": 0,
+        "resolved_count_delta": 0,
+        "unresolved_count_delta": 0,
+        "ambiguity_count_delta": 0,
+        "confidence_avg_delta": null
+      },
+      "trend": "stable"
+    },
+    {
+      "target": "https://github.com/bradfordwagner/ansible-role-github-runner",
+      "batch_id": 16,
+      "captured_at_utc": "2026-03-22 22:59:36+00:00",
+      "previous_captured_at_utc": "2026-03-22 22:59:29+00:00",
+      "current": {
+        "variable_count": 0,
+        "resolved_count": 0,
+        "unresolved_count": 0,
+        "ambiguity_count": 0,
+        "confidence_avg": null
+      },
+      "previous": {
+        "variable_count": 0,
+        "resolved_count": 0,
+        "unresolved_count": 0,
+        "ambiguity_count": 0,
+        "confidence_avg": null
+      },
+      "delta": {
+        "variable_count_delta": 0,
+        "resolved_count_delta": 0,
+        "unresolved_count_delta": 0,
+        "ambiguity_count_delta": 0,
+        "confidence_avg_delta": null
+      },
+      "trend": "stable"
+    },
+    {
+      "target": "https://github.com/crimsonfez/ansible-role-netbird",
+      "batch_id": 16,
+      "captured_at_utc": "2026-03-22 22:59:36+00:00",
+      "previous_captured_at_utc": "2026-03-22 22:59:29+00:00",
+      "current": {
+        "variable_count": 0,
+        "resolved_count": 0,
+        "unresolved_count": 0,
+        "ambiguity_count": 0,
+        "confidence_avg": null
+      },
+      "previous": {
+        "variable_count": 0,
+        "resolved_count": 0,
+        "unresolved_count": 0,
+        "ambiguity_count": 0,
+        "confidence_avg": null
+      },
+      "delta": {
+        "variable_count_delta": 0,
+        "resolved_count_delta": 0,
+        "unresolved_count_delta": 0,
+        "ambiguity_count_delta": 0,
+        "confidence_avg_delta": null
+      },
+      "trend": "stable"
+    },
+    {
+      "target": "https://github.com/gara2000/ansible-role-nat",
+      "batch_id": 16,
+      "captured_at_utc": "2026-03-22 22:59:36+00:00",
+      "previous_captured_at_utc": "2026-03-22 22:59:29+00:00",
+      "current": {
+        "variable_count": 0,
+        "resolved_count": 0,
+        "unresolved_count": 0,
+        "ambiguity_count": 0,
+        "confidence_avg": null
+      },
+      "previous": {
+        "variable_count": 0,
+        "resolved_count": 0,
+        "unresolved_count": 0,
+        "ambiguity_count": 0,
+        "confidence_avg": null
+      },
+      "delta": {
+        "variable_count_delta": 0,
+        "resolved_count_delta": 0,
+        "unresolved_count_delta": 0,
+        "ambiguity_count_delta": 0,
+        "confidence_avg_delta": null
+      },
+      "trend": "stable"
+    },
+    {
+      "target": "https://github.com/mattias-jonsson/ansible_role_hostsfile",
+      "batch_id": 16,
+      "captured_at_utc": "2026-03-22 22:59:36+00:00",
+      "previous_captured_at_utc": "2026-03-22 22:59:29+00:00",
+      "current": {
+        "variable_count": 0,
+        "resolved_count": 0,
+        "unresolved_count": 0,
+        "ambiguity_count": 0,
+        "confidence_avg": null
+      },
+      "previous": {
+        "variable_count": 0,
+        "resolved_count": 0,
+        "unresolved_count": 0,
+        "ambiguity_count": 0,
+        "confidence_avg": null
+      },
+      "delta": {
+        "variable_count_delta": 0,
+        "resolved_count_delta": 0,
+        "unresolved_count_delta": 0,
+        "ambiguity_count_delta": 0,
+        "confidence_avg_delta": null
+      },
+      "trend": "stable"
+    },
+    {
+      "target": "https://github.com/mattias-jonsson/ansible_role_issue_banner",
+      "batch_id": 16,
+      "captured_at_utc": "2026-03-22 22:59:36+00:00",
+      "previous_captured_at_utc": "2026-03-22 22:59:29+00:00",
+      "current": {
+        "variable_count": 0,
+        "resolved_count": 0,
+        "unresolved_count": 0,
+        "ambiguity_count": 0,
+        "confidence_avg": null
+      },
+      "previous": {
+        "variable_count": 0,
+        "resolved_count": 0,
+        "unresolved_count": 0,
+        "ambiguity_count": 0,
+        "confidence_avg": null
+      },
+      "delta": {
+        "variable_count_delta": 0,
+        "resolved_count_delta": 0,
+        "unresolved_count_delta": 0,
+        "ambiguity_count_delta": 0,
+        "confidence_avg_delta": null
+      },
+      "trend": "stable"
+    },
+    {
+      "target": "https://github.com/mattias-jonsson/ansible_role_sysctl",
+      "batch_id": 16,
+      "captured_at_utc": "2026-03-22 22:59:36+00:00",
+      "previous_captured_at_utc": "2026-03-22 22:59:29+00:00",
+      "current": {
+        "variable_count": 0,
+        "resolved_count": 0,
+        "unresolved_count": 0,
+        "ambiguity_count": 0,
+        "confidence_avg": null
+      },
+      "previous": {
+        "variable_count": 0,
+        "resolved_count": 0,
+        "unresolved_count": 0,
+        "ambiguity_count": 0,
+        "confidence_avg": null
+      },
+      "delta": {
+        "variable_count_delta": 0,
+        "resolved_count_delta": 0,
+        "unresolved_count_delta": 0,
+        "ambiguity_count_delta": 0,
+        "confidence_avg_delta": null
+      },
+      "trend": "stable"
+    },
+    {
+      "target": "https://github.com/PrymalInstynct/ansible_laurel",
+      "batch_id": 16,
+      "captured_at_utc": "2026-03-22 22:59:36+00:00",
+      "previous_captured_at_utc": "2026-03-22 22:59:29+00:00",
+      "current": {
+        "variable_count": 0,
+        "resolved_count": 0,
+        "unresolved_count": 0,
+        "ambiguity_count": 0,
+        "confidence_avg": null
+      },
+      "previous": {
+        "variable_count": 0,
+        "resolved_count": 0,
+        "unresolved_count": 0,
+        "ambiguity_count": 0,
+        "confidence_avg": null
+      },
+      "delta": {
+        "variable_count_delta": 0,
+        "resolved_count_delta": 0,
+        "unresolved_count_delta": 0,
+        "ambiguity_count_delta": 0,
+        "confidence_avg_delta": null
+      },
+      "trend": "stable"
+    },
+    {
+      "target": "https://github.com/sscheib/ansible-role-openwrt_base",
+      "batch_id": 16,
+      "captured_at_utc": "2026-03-22 22:59:36+00:00",
+      "previous_captured_at_utc": "2026-03-22 22:59:29+00:00",
+      "current": {
+        "variable_count": 0,
+        "resolved_count": 0,
+        "unresolved_count": 0,
+        "ambiguity_count": 0,
+        "confidence_avg": null
+      },
+      "previous": {
+        "variable_count": 0,
+        "resolved_count": 0,
+        "unresolved_count": 0,
+        "ambiguity_count": 0,
+        "confidence_avg": null
+      },
+      "delta": {
+        "variable_count_delta": 0,
+        "resolved_count_delta": 0,
+        "unresolved_count_delta": 0,
+        "ambiguity_count_delta": 0,
+        "confidence_avg_delta": null
+      },
+      "trend": "stable"
+    },
+    {
+      "target": "https://github.com/trippsc2/ansible-role-bleachbit",
+      "batch_id": 16,
+      "captured_at_utc": "2026-03-22 22:59:36+00:00",
+      "previous_captured_at_utc": "2026-03-22 22:59:29+00:00",
+      "current": {
+        "variable_count": 0,
+        "resolved_count": 0,
+        "unresolved_count": 0,
+        "ambiguity_count": 0,
+        "confidence_avg": null
+      },
+      "previous": {
+        "variable_count": 0,
+        "resolved_count": 0,
+        "unresolved_count": 0,
+        "ambiguity_count": 0,
+        "confidence_avg": null
+      },
+      "delta": {
+        "variable_count_delta": 0,
+        "resolved_count_delta": 0,
+        "unresolved_count_delta": 0,
+        "ambiguity_count_delta": 0,
+        "confidence_avg_delta": null
+      },
+      "trend": "stable"
+    },
+    {
+      "target": "https://github.com/trippsc2/ansible-role-rhel_8_cis",
+      "batch_id": 16,
+      "captured_at_utc": "2026-03-22 22:59:36+00:00",
+      "previous_captured_at_utc": "2026-03-22 22:59:29+00:00",
+      "current": {
+        "variable_count": 0,
+        "resolved_count": 0,
+        "unresolved_count": 0,
+        "ambiguity_count": 0,
+        "confidence_avg": null
+      },
+      "previous": {
+        "variable_count": 0,
+        "resolved_count": 0,
+        "unresolved_count": 0,
+        "ambiguity_count": 0,
+        "confidence_avg": null
+      },
+      "delta": {
+        "variable_count_delta": 0,
+        "resolved_count_delta": 0,
+        "unresolved_count_delta": 0,
+        "ambiguity_count_delta": 0,
+        "confidence_avg_delta": null
+      },
+      "trend": "stable"
+    },
+    {
+      "target": "https://github.com/trippsc2/ansible-role-rhel_first_steps",
+      "batch_id": 16,
+      "captured_at_utc": "2026-03-22 22:59:36+00:00",
+      "previous_captured_at_utc": "2026-03-22 22:59:29+00:00",
+      "current": {
+        "variable_count": 0,
+        "resolved_count": 0,
+        "unresolved_count": 0,
+        "ambiguity_count": 0,
+        "confidence_avg": null
+      },
+      "previous": {
+        "variable_count": 0,
+        "resolved_count": 0,
+        "unresolved_count": 0,
+        "ambiguity_count": 0,
+        "confidence_avg": null
+      },
+      "delta": {
+        "variable_count_delta": 0,
+        "resolved_count_delta": 0,
+        "unresolved_count_delta": 0,
+        "ambiguity_count_delta": 0,
+        "confidence_avg_delta": null
+      },
+      "trend": "stable"
+    },
+    {
+      "target": "https://github.com/trippsc2/ansible-role-rhel_seal_for_template",
+      "batch_id": 16,
+      "captured_at_utc": "2026-03-22 22:59:36+00:00",
+      "previous_captured_at_utc": "2026-03-22 22:59:29+00:00",
+      "current": {
+        "variable_count": 0,
+        "resolved_count": 0,
+        "unresolved_count": 0,
+        "ambiguity_count": 0,
+        "confidence_avg": null
+      },
+      "previous": {
+        "variable_count": 0,
+        "resolved_count": 0,
+        "unresolved_count": 0,
+        "ambiguity_count": 0,
+        "confidence_avg": null
+      },
+      "delta": {
+        "variable_count_delta": 0,
+        "resolved_count_delta": 0,
+        "unresolved_count_delta": 0,
+        "ambiguity_count_delta": 0,
+        "confidence_avg_delta": null
+      },
+      "trend": "stable"
+    },
+    {
+      "target": "https://github.com/trippsc2/ansible-role-windows_2019_cis",
+      "batch_id": 16,
+      "captured_at_utc": "2026-03-22 22:59:36+00:00",
+      "previous_captured_at_utc": "2026-03-22 22:59:29+00:00",
+      "current": {
+        "variable_count": 0,
+        "resolved_count": 0,
+        "unresolved_count": 0,
+        "ambiguity_count": 0,
+        "confidence_avg": null
+      },
+      "previous": {
+        "variable_count": 0,
+        "resolved_count": 0,
+        "unresolved_count": 0,
+        "ambiguity_count": 0,
+        "confidence_avg": null
+      },
+      "delta": {
+        "variable_count_delta": 0,
+        "resolved_count_delta": 0,
+        "unresolved_count_delta": 0,
+        "ambiguity_count_delta": 0,
+        "confidence_avg_delta": null
+      },
+      "trend": "stable"
+    },
+    {
+      "target": "https://github.com/trippsc2/ansible-role-windows_2022_cis",
+      "batch_id": 16,
+      "captured_at_utc": "2026-03-22 22:59:36+00:00",
+      "previous_captured_at_utc": "2026-03-22 22:59:29+00:00",
+      "current": {
+        "variable_count": 0,
+        "resolved_count": 0,
+        "unresolved_count": 0,
+        "ambiguity_count": 0,
+        "confidence_avg": null
+      },
+      "previous": {
+        "variable_count": 0,
+        "resolved_count": 0,
+        "unresolved_count": 0,
+        "ambiguity_count": 0,
+        "confidence_avg": null
+      },
+      "delta": {
+        "variable_count_delta": 0,
+        "resolved_count_delta": 0,
+        "unresolved_count_delta": 0,
+        "ambiguity_count_delta": 0,
+        "confidence_avg_delta": null
+      },
+      "trend": "stable"
+    },
+    {
+      "target": "https://github.com/trippsc2/ansible-role-win_seal_for_template",
+      "batch_id": 16,
+      "captured_at_utc": "2026-03-22 22:59:36+00:00",
+      "previous_captured_at_utc": "2026-03-22 22:59:29+00:00",
+      "current": {
+        "variable_count": 0,
+        "resolved_count": 0,
+        "unresolved_count": 0,
+        "ambiguity_count": 0,
+        "confidence_avg": null
+      },
+      "previous": {
+        "variable_count": 0,
+        "resolved_count": 0,
+        "unresolved_count": 0,
+        "ambiguity_count": 0,
+        "confidence_avg": null
+      },
+      "delta": {
+        "variable_count_delta": 0,
+        "resolved_count_delta": 0,
+        "unresolved_count_delta": 0,
+        "ambiguity_count_delta": 0,
+        "confidence_avg_delta": null
+      },
+      "trend": "stable"
+    },
+    {
+      "target": "https://github.com/vrdipu/devops-docker",
+      "batch_id": 16,
+      "captured_at_utc": "2026-03-22 22:59:36+00:00",
+      "previous_captured_at_utc": "2026-03-22 22:59:29+00:00",
+      "current": {
+        "variable_count": 0,
+        "resolved_count": 0,
+        "unresolved_count": 0,
+        "ambiguity_count": 0,
+        "confidence_avg": null
+      },
+      "previous": {
+        "variable_count": 0,
+        "resolved_count": 0,
+        "unresolved_count": 0,
+        "ambiguity_count": 0,
+        "confidence_avg": null
+      },
+      "delta": {
+        "variable_count_delta": 0,
+        "resolved_count_delta": 0,
+        "unresolved_count_delta": 0,
+        "ambiguity_count_delta": 0,
+        "confidence_avg_delta": null
+      },
+      "trend": "stable"
+    },
+    {
+      "target": "https://github.com/andrewrothstein/ansible-ollama",
+      "batch_id": 16,
+      "captured_at_utc": "2026-03-22 22:59:34+00:00",
+      "previous_captured_at_utc": "2026-03-22 22:59:29+00:00",
+      "current": {
+        "variable_count": 0,
+        "resolved_count": 0,
+        "unresolved_count": 0,
+        "ambiguity_count": 0,
+        "confidence_avg": null
+      },
+      "previous": {
+        "variable_count": 0,
+        "resolved_count": 0,
+        "unresolved_count": 0,
+        "ambiguity_count": 0,
+        "confidence_avg": null
+      },
+      "delta": {
+        "variable_count_delta": 0,
+        "resolved_count_delta": 0,
+        "unresolved_count_delta": 0,
+        "ambiguity_count_delta": 0,
+        "confidence_avg_delta": null
+      },
+      "trend": "stable"
+    },
+    {
+      "target": "https://github.com/andrewrothstein/ansible-bento",
+      "batch_id": 16,
+      "captured_at_utc": "2026-03-22 22:59:31+00:00",
+      "previous_captured_at_utc": "2026-03-22 22:59:25+00:00",
+      "current": {
+        "variable_count": 0,
+        "resolved_count": 0,
+        "unresolved_count": 0,
+        "ambiguity_count": 0,
+        "confidence_avg": null
+      },
+      "previous": {
+        "variable_count": 0,
+        "resolved_count": 0,
+        "unresolved_count": 0,
+        "ambiguity_count": 0,
+        "confidence_avg": null
+      },
+      "delta": {
+        "variable_count_delta": 0,
+        "resolved_count_delta": 0,
+        "unresolved_count_delta": 0,
+        "ambiguity_count_delta": 0,
+        "confidence_avg_delta": null
+      },
+      "trend": "stable"
+    },
+    {
+      "target": "https://github.com/bertvv/ansible-role-bind",
+      "batch_id": 16,
+      "captured_at_utc": "2026-03-22 22:59:31+00:00",
+      "previous_captured_at_utc": "2026-03-22 22:59:25+00:00",
+      "current": {
+        "variable_count": 0,
+        "resolved_count": 0,
+        "unresolved_count": 0,
+        "ambiguity_count": 0,
+        "confidence_avg": null
+      },
+      "previous": {
+        "variable_count": 0,
+        "resolved_count": 0,
+        "unresolved_count": 0,
+        "ambiguity_count": 0,
+        "confidence_avg": null
+      },
+      "delta": {
+        "variable_count_delta": 0,
+        "resolved_count_delta": 0,
+        "unresolved_count_delta": 0,
+        "ambiguity_count_delta": 0,
+        "confidence_avg_delta": null
+      },
+      "trend": "stable"
+    },
+    {
+      "target": "https://github.com/csakaszamok/ansible-role-rke2-after",
+      "batch_id": 16,
+      "captured_at_utc": "2026-03-22 22:59:31+00:00",
+      "previous_captured_at_utc": "2026-03-22 22:59:25+00:00",
+      "current": {
+        "variable_count": 0,
+        "resolved_count": 0,
+        "unresolved_count": 0,
+        "ambiguity_count": 0,
+        "confidence_avg": null
+      },
+      "previous": {
+        "variable_count": 0,
+        "resolved_count": 0,
+        "unresolved_count": 0,
+        "ambiguity_count": 0,
+        "confidence_avg": null
+      },
+      "delta": {
+        "variable_count_delta": 0,
+        "resolved_count_delta": 0,
+        "unresolved_count_delta": 0,
+        "ambiguity_count_delta": 0,
+        "confidence_avg_delta": null
+      },
+      "trend": "stable"
+    },
+    {
+      "target": "https://github.com/geerlingguy/ansible-role-apache",
+      "batch_id": 16,
+      "captured_at_utc": "2026-03-22 22:59:31+00:00",
+      "previous_captured_at_utc": "2026-03-22 22:59:25+00:00",
+      "current": {
+        "variable_count": 0,
+        "resolved_count": 0,
+        "unresolved_count": 0,
+        "ambiguity_count": 0,
+        "confidence_avg": null
+      },
+      "previous": {
+        "variable_count": 0,
+        "resolved_count": 0,
+        "unresolved_count": 0,
+        "ambiguity_count": 0,
+        "confidence_avg": null
+      },
+      "delta": {
+        "variable_count_delta": 0,
+        "resolved_count_delta": 0,
+        "unresolved_count_delta": 0,
+        "ambiguity_count_delta": 0,
+        "confidence_avg_delta": null
+      },
+      "trend": "stable"
+    },
+    {
+      "target": "https://github.com/geerlingguy/ansible-role-java",
+      "batch_id": 16,
+      "captured_at_utc": "2026-03-22 22:59:31+00:00",
+      "previous_captured_at_utc": "2026-03-22 22:59:25+00:00",
+      "current": {
+        "variable_count": 0,
+        "resolved_count": 0,
+        "unresolved_count": 0,
+        "ambiguity_count": 0,
+        "confidence_avg": null
+      },
+      "previous": {
+        "variable_count": 0,
+        "resolved_count": 0,
+        "unresolved_count": 0,
+        "ambiguity_count": 0,
+        "confidence_avg": null
+      },
+      "delta": {
+        "variable_count_delta": 0,
+        "resolved_count_delta": 0,
+        "unresolved_count_delta": 0,
+        "ambiguity_count_delta": 0,
+        "confidence_avg_delta": null
+      },
+      "trend": "stable"
+    },
+    {
+      "target": "https://github.com/geerlingguy/ansible-role-mysql",
+      "batch_id": 16,
+      "captured_at_utc": "2026-03-22 22:59:31+00:00",
+      "previous_captured_at_utc": "2026-03-22 22:59:25+00:00",
+      "current": {
+        "variable_count": 0,
+        "resolved_count": 0,
+        "unresolved_count": 0,
+        "ambiguity_count": 0,
+        "confidence_avg": null
+      },
+      "previous": {
+        "variable_count": 0,
+        "resolved_count": 0,
+        "unresolved_count": 0,
+        "ambiguity_count": 0,
+        "confidence_avg": null
+      },
+      "delta": {
+        "variable_count_delta": 0,
+        "resolved_count_delta": 0,
+        "unresolved_count_delta": 0,
+        "ambiguity_count_delta": 0,
+        "confidence_avg_delta": null
+      },
+      "trend": "stable"
+    },
+    {
+      "target": "https://github.com/geerlingguy/ansible-role-nginx",
+      "batch_id": 16,
+      "captured_at_utc": "2026-03-22 22:59:31+00:00",
+      "previous_captured_at_utc": "2026-03-22 22:59:25+00:00",
+      "current": {
+        "variable_count": 0,
+        "resolved_count": 0,
+        "unresolved_count": 0,
+        "ambiguity_count": 0,
+        "confidence_avg": null
+      },
+      "previous": {
+        "variable_count": 0,
+        "resolved_count": 0,
+        "unresolved_count": 0,
+        "ambiguity_count": 0,
+        "confidence_avg": null
+      },
+      "delta": {
+        "variable_count_delta": 0,
+        "resolved_count_delta": 0,
+        "unresolved_count_delta": 0,
+        "ambiguity_count_delta": 0,
+        "confidence_avg_delta": null
+      },
+      "trend": "stable"
+    },
+    {
+      "target": "https://github.com/geerlingguy/ansible-role-nodejs",
+      "batch_id": 16,
+      "captured_at_utc": "2026-03-22 22:59:31+00:00",
+      "previous_captured_at_utc": "2026-03-22 22:59:25+00:00",
+      "current": {
+        "variable_count": 0,
+        "resolved_count": 0,
+        "unresolved_count": 0,
+        "ambiguity_count": 0,
+        "confidence_avg": null
+      },
+      "previous": {
+        "variable_count": 0,
+        "resolved_count": 0,
+        "unresolved_count": 0,
+        "ambiguity_count": 0,
+        "confidence_avg": null
+      },
+      "delta": {
+        "variable_count_delta": 0,
+        "resolved_count_delta": 0,
+        "unresolved_count_delta": 0,
+        "ambiguity_count_delta": 0,
+        "confidence_avg_delta": null
+      },
+      "trend": "stable"
+    },
+    {
+      "target": "https://github.com/geerlingguy/ansible-role-php",
+      "batch_id": 16,
+      "captured_at_utc": "2026-03-22 22:59:31+00:00",
+      "previous_captured_at_utc": "2026-03-22 22:59:25+00:00",
+      "current": {
+        "variable_count": 0,
+        "resolved_count": 0,
+        "unresolved_count": 0,
+        "ambiguity_count": 0,
+        "confidence_avg": null
+      },
+      "previous": {
+        "variable_count": 0,
+        "resolved_count": 0,
+        "unresolved_count": 0,
+        "ambiguity_count": 0,
+        "confidence_avg": null
+      },
+      "delta": {
+        "variable_count_delta": 0,
+        "resolved_count_delta": 0,
+        "unresolved_count_delta": 0,
+        "ambiguity_count_delta": 0,
+        "confidence_avg_delta": null
+      },
+      "trend": "stable"
+    },
+    {
+      "target": "https://github.com/geerlingguy/ansible-role-postgresql",
+      "batch_id": 16,
+      "captured_at_utc": "2026-03-22 22:59:31+00:00",
+      "previous_captured_at_utc": "2026-03-22 22:59:25+00:00",
+      "current": {
+        "variable_count": 0,
+        "resolved_count": 0,
+        "unresolved_count": 0,
+        "ambiguity_count": 0,
+        "confidence_avg": null
+      },
+      "previous": {
+        "variable_count": 0,
+        "resolved_count": 0,
+        "unresolved_count": 0,
+        "ambiguity_count": 0,
+        "confidence_avg": null
+      },
+      "delta": {
+        "variable_count_delta": 0,
+        "resolved_count_delta": 0,
+        "unresolved_count_delta": 0,
+        "ambiguity_count_delta": 0,
+        "confidence_avg_delta": null
+      },
+      "trend": "stable"
+    },
+    {
+      "target": "https://github.com/guiand888/ansible-role-gvisor_install",
+      "batch_id": 16,
+      "captured_at_utc": "2026-03-22 22:59:31+00:00",
+      "previous_captured_at_utc": "2026-03-22 22:59:25+00:00",
+      "current": {
+        "variable_count": 0,
+        "resolved_count": 0,
+        "unresolved_count": 0,
+        "ambiguity_count": 0,
+        "confidence_avg": null
+      },
+      "previous": {
+        "variable_count": 0,
+        "resolved_count": 0,
+        "unresolved_count": 0,
+        "ambiguity_count": 0,
+        "confidence_avg": null
+      },
+      "delta": {
+        "variable_count_delta": 0,
+        "resolved_count_delta": 0,
+        "unresolved_count_delta": 0,
+        "ambiguity_count_delta": 0,
+        "confidence_avg_delta": null
+      },
+      "trend": "stable"
+    },
+    {
+      "target": "https://github.com/iam-veeramalla/dummy-role",
+      "batch_id": 16,
+      "captured_at_utc": "2026-03-22 22:59:31+00:00",
+      "previous_captured_at_utc": "2026-03-22 22:59:25+00:00",
+      "current": {
+        "variable_count": 0,
+        "resolved_count": 0,
+        "unresolved_count": 0,
+        "ambiguity_count": 0,
+        "confidence_avg": null
+      },
+      "previous": {
+        "variable_count": 0,
+        "resolved_count": 0,
+        "unresolved_count": 0,
+        "ambiguity_count": 0,
+        "confidence_avg": null
+      },
+      "delta": {
+        "variable_count_delta": 0,
+        "resolved_count_delta": 0,
+        "unresolved_count_delta": 0,
+        "ambiguity_count_delta": 0,
+        "confidence_avg_delta": null
+      },
+      "trend": "stable"
+    },
+    {
+      "target": "https://github.com/mshurutov/pgbackup",
+      "batch_id": 16,
+      "captured_at_utc": "2026-03-22 22:59:31+00:00",
+      "previous_captured_at_utc": "2026-03-22 22:59:25+00:00",
+      "current": {
+        "variable_count": 0,
+        "resolved_count": 0,
+        "unresolved_count": 0,
+        "ambiguity_count": 0,
+        "confidence_avg": null
+      },
+      "previous": {
+        "variable_count": 0,
+        "resolved_count": 0,
+        "unresolved_count": 0,
+        "ambiguity_count": 0,
+        "confidence_avg": null
+      },
+      "delta": {
+        "variable_count_delta": 0,
+        "resolved_count_delta": 0,
+        "unresolved_count_delta": 0,
+        "ambiguity_count_delta": 0,
+        "confidence_avg_delta": null
+      },
+      "trend": "stable"
+    },
+    {
+      "target": "https://github.com/msltwtf/ansible-role.moodle",
+      "batch_id": 16,
+      "captured_at_utc": "2026-03-22 22:59:31+00:00",
+      "previous_captured_at_utc": "2026-03-22 22:59:25+00:00",
+      "current": {
+        "variable_count": 0,
+        "resolved_count": 0,
+        "unresolved_count": 0,
+        "ambiguity_count": 0,
+        "confidence_avg": null
+      },
+      "previous": {
+        "variable_count": 0,
+        "resolved_count": 0,
+        "unresolved_count": 0,
+        "ambiguity_count": 0,
+        "confidence_avg": null
+      },
+      "delta": {
+        "variable_count_delta": 0,
+        "resolved_count_delta": 0,
+        "unresolved_count_delta": 0,
+        "ambiguity_count_delta": 0,
+        "confidence_avg_delta": null
+      },
+      "trend": "stable"
+    },
+    {
+      "target": "https://github.com/msterhuj/ansible-role-chrony",
+      "batch_id": 16,
+      "captured_at_utc": "2026-03-22 22:59:31+00:00",
+      "previous_captured_at_utc": "2026-03-22 22:59:25+00:00",
+      "current": {
+        "variable_count": 0,
+        "resolved_count": 0,
+        "unresolved_count": 0,
+        "ambiguity_count": 0,
+        "confidence_avg": null
+      },
+      "previous": {
+        "variable_count": 0,
+        "resolved_count": 0,
+        "unresolved_count": 0,
+        "ambiguity_count": 0,
+        "confidence_avg": null
+      },
+      "delta": {
+        "variable_count_delta": 0,
+        "resolved_count_delta": 0,
+        "unresolved_count_delta": 0,
+        "ambiguity_count_delta": 0,
+        "confidence_avg_delta": null
+      },
+      "trend": "stable"
+    },
+    {
+      "target": "https://github.com/mutl3y/ansible_port_listener",
+      "batch_id": 16,
+      "captured_at_utc": "2026-03-22 22:59:31+00:00",
+      "previous_captured_at_utc": "2026-03-22 22:59:25+00:00",
+      "current": {
+        "variable_count": 0,
+        "resolved_count": 0,
+        "unresolved_count": 0,
+        "ambiguity_count": 0,
+        "confidence_avg": null
+      },
+      "previous": {
+        "variable_count": 0,
+        "resolved_count": 0,
+        "unresolved_count": 0,
+        "ambiguity_count": 0,
+        "confidence_avg": null
+      },
+      "delta": {
+        "variable_count_delta": 0,
+        "resolved_count_delta": 0,
+        "unresolved_count_delta": 0,
+        "ambiguity_count_delta": 0,
+        "confidence_avg_delta": null
+      },
+      "trend": "stable"
+    },
+    {
+      "target": "https://github.com/nanbabu/ansible-galaxy-dummy",
+      "batch_id": 16,
+      "captured_at_utc": "2026-03-22 22:59:31+00:00",
+      "previous_captured_at_utc": "2026-03-22 22:59:25+00:00",
+      "current": {
+        "variable_count": 0,
+        "resolved_count": 0,
+        "unresolved_count": 0,
+        "ambiguity_count": 0,
+        "confidence_avg": null
+      },
+      "previous": {
+        "variable_count": 0,
+        "resolved_count": 0,
+        "unresolved_count": 0,
+        "ambiguity_count": 0,
+        "confidence_avg": null
+      },
+      "delta": {
+        "variable_count_delta": 0,
+        "resolved_count_delta": 0,
+        "unresolved_count_delta": 0,
+        "ambiguity_count_delta": 0,
+        "confidence_avg_delta": null
+      },
+      "trend": "stable"
+    },
+    {
+      "target": "https://github.com/PrathimaPatthipati/dummy-role",
+      "batch_id": 16,
+      "captured_at_utc": "2026-03-22 22:59:31+00:00",
+      "previous_captured_at_utc": "2026-03-22 22:59:25+00:00",
+      "current": {
+        "variable_count": 0,
+        "resolved_count": 0,
+        "unresolved_count": 0,
+        "ambiguity_count": 0,
+        "confidence_avg": null
+      },
+      "previous": {
+        "variable_count": 0,
+        "resolved_count": 0,
+        "unresolved_count": 0,
+        "ambiguity_count": 0,
+        "confidence_avg": null
+      },
+      "delta": {
+        "variable_count_delta": 0,
+        "resolved_count_delta": 0,
+        "unresolved_count_delta": 0,
+        "ambiguity_count_delta": 0,
+        "confidence_avg_delta": null
+      },
+      "trend": "stable"
+    },
+    {
+      "target": "https://github.com/PrymalInstynct/ansible_auditd",
+      "batch_id": 16,
+      "captured_at_utc": "2026-03-22 22:59:31+00:00",
+      "previous_captured_at_utc": "2026-03-22 22:59:25+00:00",
+      "current": {
+        "variable_count": 0,
+        "resolved_count": 0,
+        "unresolved_count": 0,
+        "ambiguity_count": 0,
+        "confidence_avg": null
+      },
+      "previous": {
+        "variable_count": 0,
+        "resolved_count": 0,
+        "unresolved_count": 0,
+        "ambiguity_count": 0,
+        "confidence_avg": null
+      },
+      "delta": {
+        "variable_count_delta": 0,
+        "resolved_count_delta": 0,
+        "unresolved_count_delta": 0,
+        "ambiguity_count_delta": 0,
+        "confidence_avg_delta": null
+      },
+      "trend": "stable"
+    },
+    {
+      "target": "https://github.com/PrymalInstynct/ludus_splunk",
+      "batch_id": 16,
+      "captured_at_utc": "2026-03-22 22:59:31+00:00",
+      "previous_captured_at_utc": "2026-03-22 22:59:25+00:00",
+      "current": {
+        "variable_count": 0,
+        "resolved_count": 0,
+        "unresolved_count": 0,
+        "ambiguity_count": 0,
+        "confidence_avg": null
+      },
+      "previous": {
+        "variable_count": 0,
+        "resolved_count": 0,
+        "unresolved_count": 0,
+        "ambiguity_count": 0,
+        "confidence_avg": null
+      },
+      "delta": {
+        "variable_count_delta": 0,
+        "resolved_count_delta": 0,
+        "unresolved_count_delta": 0,
+        "ambiguity_count_delta": 0,
+        "confidence_avg_delta": null
+      },
+      "trend": "stable"
+    },
+    {
+      "target": "https://github.com/Splorgle/ansible-role-wireguard",
+      "batch_id": 16,
+      "captured_at_utc": "2026-03-22 22:59:31+00:00",
+      "previous_captured_at_utc": "2026-03-22 22:59:25+00:00",
+      "current": {
+        "variable_count": 0,
+        "resolved_count": 0,
+        "unresolved_count": 0,
+        "ambiguity_count": 0,
+        "confidence_avg": null
+      },
+      "previous": {
+        "variable_count": 0,
+        "resolved_count": 0,
+        "unresolved_count": 0,
+        "ambiguity_count": 0,
+        "confidence_avg": null
+      },
+      "delta": {
+        "variable_count_delta": 0,
+        "resolved_count_delta": 0,
+        "unresolved_count_delta": 0,
+        "ambiguity_count_delta": 0,
+        "confidence_avg_delta": null
+      },
+      "trend": "stable"
+    },
+    {
+      "target": "https://github.com/sv0/ansible-secure",
+      "batch_id": 16,
+      "captured_at_utc": "2026-03-22 22:59:31+00:00",
+      "previous_captured_at_utc": "2026-03-22 22:59:25+00:00",
+      "current": {
+        "variable_count": 0,
+        "resolved_count": 0,
+        "unresolved_count": 0,
+        "ambiguity_count": 0,
+        "confidence_avg": null
+      },
+      "previous": {
+        "variable_count": 0,
+        "resolved_count": 0,
+        "unresolved_count": 0,
+        "ambiguity_count": 0,
+        "confidence_avg": null
+      },
+      "delta": {
+        "variable_count_delta": 0,
+        "resolved_count_delta": 0,
+        "unresolved_count_delta": 0,
+        "ambiguity_count_delta": 0,
+        "confidence_avg_delta": null
+      },
+      "trend": "stable"
+    },
+    {
+      "target": "https://github.com/svendewindt/ansible-role-base",
+      "batch_id": 16,
+      "captured_at_utc": "2026-03-22 22:59:31+00:00",
+      "previous_captured_at_utc": "2026-03-22 22:59:25+00:00",
+      "current": {
+        "variable_count": 0,
+        "resolved_count": 0,
+        "unresolved_count": 0,
+        "ambiguity_count": 0,
+        "confidence_avg": null
+      },
+      "previous": {
+        "variable_count": 0,
+        "resolved_count": 0,
+        "unresolved_count": 0,
+        "ambiguity_count": 0,
+        "confidence_avg": null
+      },
+      "delta": {
+        "variable_count_delta": 0,
+        "resolved_count_delta": 0,
+        "unresolved_count_delta": 0,
+        "ambiguity_count_delta": 0,
+        "confidence_avg_delta": null
+      },
+      "trend": "stable"
+    },
+    {
+      "target": "https://github.com/trippsc2/ansible-role-create_testing_ad_domain",
+      "batch_id": 16,
+      "captured_at_utc": "2026-03-22 22:59:31+00:00",
+      "previous_captured_at_utc": "2026-03-22 22:59:25+00:00",
+      "current": {
+        "variable_count": 0,
+        "resolved_count": 0,
+        "unresolved_count": 0,
+        "ambiguity_count": 0,
+        "confidence_avg": null
+      },
+      "previous": {
+        "variable_count": 0,
+        "resolved_count": 0,
+        "unresolved_count": 0,
+        "ambiguity_count": 0,
+        "confidence_avg": null
+      },
+      "delta": {
+        "variable_count_delta": 0,
+        "resolved_count_delta": 0,
+        "unresolved_count_delta": 0,
+        "ambiguity_count_delta": 0,
+        "confidence_avg_delta": null
+      },
+      "trend": "stable"
+    },
+    {
+      "target": "https://github.com/trippsc2/ansible-role-debian_first_steps",
+      "batch_id": 16,
+      "captured_at_utc": "2026-03-22 22:59:31+00:00",
+      "previous_captured_at_utc": "2026-03-22 22:59:25+00:00",
+      "current": {
+        "variable_count": 0,
+        "resolved_count": 0,
+        "unresolved_count": 0,
+        "ambiguity_count": 0,
+        "confidence_avg": null
+      },
+      "previous": {
+        "variable_count": 0,
+        "resolved_count": 0,
+        "unresolved_count": 0,
+        "ambiguity_count": 0,
+        "confidence_avg": null
+      },
+      "delta": {
+        "variable_count_delta": 0,
+        "resolved_count_delta": 0,
+        "unresolved_count_delta": 0,
+        "ambiguity_count_delta": 0,
+        "confidence_avg_delta": null
+      },
+      "trend": "stable"
+    },
+    {
+      "target": "https://github.com/trippsc2/ansible-role-debian_seal_for_template",
+      "batch_id": 16,
+      "captured_at_utc": "2026-03-22 22:59:31+00:00",
+      "previous_captured_at_utc": "2026-03-22 22:59:25+00:00",
+      "current": {
+        "variable_count": 0,
+        "resolved_count": 0,
+        "unresolved_count": 0,
+        "ambiguity_count": 0,
+        "confidence_avg": null
+      },
+      "previous": {
+        "variable_count": 0,
+        "resolved_count": 0,
+        "unresolved_count": 0,
+        "ambiguity_count": 0,
+        "confidence_avg": null
+      },
+      "delta": {
+        "variable_count_delta": 0,
+        "resolved_count_delta": 0,
+        "unresolved_count_delta": 0,
+        "ambiguity_count_delta": 0,
+        "confidence_avg_delta": null
+      },
+      "trend": "stable"
+    },
+    {
+      "target": "https://github.com/trippsc2/ansible-role-generate_csr",
+      "batch_id": 16,
+      "captured_at_utc": "2026-03-22 22:59:31+00:00",
+      "previous_captured_at_utc": "2026-03-22 22:59:25+00:00",
+      "current": {
+        "variable_count": 0,
+        "resolved_count": 0,
+        "unresolved_count": 0,
+        "ambiguity_count": 0,
+        "confidence_avg": null
+      },
+      "previous": {
+        "variable_count": 0,
+        "resolved_count": 0,
+        "unresolved_count": 0,
+        "ambiguity_count": 0,
+        "confidence_avg": null
+      },
+      "delta": {
+        "variable_count_delta": 0,
+        "resolved_count_delta": 0,
+        "unresolved_count_delta": 0,
+        "ambiguity_count_delta": 0,
+        "confidence_avg_delta": null
+      },
+      "trend": "stable"
+    },
+    {
+      "target": "https://github.com/trippsc2/ansible-role-join_testing_ad_domain",
+      "batch_id": 16,
+      "captured_at_utc": "2026-03-22 22:59:31+00:00",
+      "previous_captured_at_utc": "2026-03-22 22:59:25+00:00",
+      "current": {
+        "variable_count": 0,
+        "resolved_count": 0,
+        "unresolved_count": 0,
+        "ambiguity_count": 0,
+        "confidence_avg": null
+      },
+      "previous": {
+        "variable_count": 0,
+        "resolved_count": 0,
+        "unresolved_count": 0,
+        "ambiguity_count": 0,
+        "confidence_avg": null
+      },
+      "delta": {
+        "variable_count_delta": 0,
+        "resolved_count_delta": 0,
+        "unresolved_count_delta": 0,
+        "ambiguity_count_delta": 0,
+        "confidence_avg_delta": null
+      },
+      "trend": "stable"
+    },
+    {
+      "target": "https://github.com/trippsc2/ansible-role-ubuntu_first_steps",
+      "batch_id": 16,
+      "captured_at_utc": "2026-03-22 22:59:31+00:00",
+      "previous_captured_at_utc": "2026-03-22 22:59:25+00:00",
+      "current": {
+        "variable_count": 0,
+        "resolved_count": 0,
+        "unresolved_count": 0,
+        "ambiguity_count": 0,
+        "confidence_avg": null
+      },
+      "previous": {
+        "variable_count": 0,
+        "resolved_count": 0,
+        "unresolved_count": 0,
+        "ambiguity_count": 0,
+        "confidence_avg": null
+      },
+      "delta": {
+        "variable_count_delta": 0,
+        "resolved_count_delta": 0,
+        "unresolved_count_delta": 0,
+        "ambiguity_count_delta": 0,
+        "confidence_avg_delta": null
+      },
+      "trend": "stable"
+    },
+    {
+      "target": "https://github.com/trippsc2/ansible-role-ubuntu_seal_for_template",
+      "batch_id": 16,
+      "captured_at_utc": "2026-03-22 22:59:31+00:00",
+      "previous_captured_at_utc": "2026-03-22 22:59:25+00:00",
+      "current": {
+        "variable_count": 0,
+        "resolved_count": 0,
+        "unresolved_count": 0,
+        "ambiguity_count": 0,
+        "confidence_avg": null
+      },
+      "previous": {
+        "variable_count": 0,
+        "resolved_count": 0,
+        "unresolved_count": 0,
+        "ambiguity_count": 0,
+        "confidence_avg": null
+      },
+      "delta": {
+        "variable_count_delta": 0,
+        "resolved_count_delta": 0,
+        "unresolved_count_delta": 0,
+        "ambiguity_count_delta": 0,
+        "confidence_avg_delta": null
+      },
+      "trend": "stable"
+    },
+    {
+      "target": "https://github.com/weareinteractive/ansible-ssh",
+      "batch_id": 16,
+      "captured_at_utc": "2026-03-22 22:59:31+00:00",
+      "previous_captured_at_utc": "2026-03-22 22:59:25+00:00",
+      "current": {
+        "variable_count": 0,
+        "resolved_count": 0,
+        "unresolved_count": 0,
+        "ambiguity_count": 0,
+        "confidence_avg": null
+      },
+      "previous": {
+        "variable_count": 0,
+        "resolved_count": 0,
+        "unresolved_count": 0,
+        "ambiguity_count": 0,
+        "confidence_avg": null
+      },
+      "delta": {
+        "variable_count_delta": 0,
+        "resolved_count_delta": 0,
+        "unresolved_count_delta": 0,
+        "ambiguity_count_delta": 0,
+        "confidence_avg_delta": null
+      },
+      "trend": "stable"
+    },
+    {
+      "target": "https://github.com/dev-sec/ansible-ssh-hardening",
+      "batch_id": 16,
+      "captured_at_utc": "2026-03-22 22:59:29+00:00",
+      "previous_captured_at_utc": "2026-03-22 22:59:25+00:00",
+      "current": {
+        "variable_count": 0,
+        "resolved_count": 0,
+        "unresolved_count": 0,
+        "ambiguity_count": 0,
+        "confidence_avg": null
+      },
+      "previous": {
+        "variable_count": 0,
+        "resolved_count": 0,
+        "unresolved_count": 0,
+        "ambiguity_count": 0,
+        "confidence_avg": null
+      },
+      "delta": {
+        "variable_count_delta": 0,
+        "resolved_count_delta": 0,
+        "unresolved_count_delta": 0,
+        "ambiguity_count_delta": 0,
+        "confidence_avg_delta": null
+      },
+      "trend": "stable"
+    }
+  ]
+}

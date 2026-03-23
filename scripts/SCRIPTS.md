@@ -20,6 +20,12 @@ python3 <script>.py ...
 
 Do not prefix `scripts/` if you are already in `scripts/`.
 
+Use a workspace-local temp directory for generated artifacts:
+
+```bash
+mkdir -p .local/tmp
+```
+
 ## Environment
 
 Most DB scripts use this DSN fallback chain:
@@ -43,13 +49,14 @@ LLM scripts use:
 ## Script Index
 
 ### `fetch_galaxy_repo_urls.py`
+
 Fetches role records from Ansible Galaxy API and writes unique GitHub repo URLs.
 
 Examples:
 
 ```bash
 python3 scripts/fetch_galaxy_repo_urls.py --output scripts/repo_urls.top100k.txt
-python3 scripts/fetch_galaxy_repo_urls.py --output /tmp/repo_urls.txt --limit 5000
+python3 scripts/fetch_galaxy_repo_urls.py --output .local/tmp/repo_urls.txt --limit 5000
 ```
 
 Key options:
@@ -59,6 +66,7 @@ Key options:
 - `--quiet/-q`: suppress progress output
 
 ### `learning_repo_batch.py`
+
 Scans repository URLs and persists snapshots/failures in Postgres.
 
 Examples:
@@ -79,6 +87,7 @@ Key options:
 - `--run-label`
 
 ### `learning_batch_smoke.py`
+
 Small local smoke test (role path targets) against Postgres persistence.
 
 Examples:
@@ -94,6 +103,7 @@ Key options:
 - `--run-label`
 
 ### `learning_section_title_report.py`
+
 Builds markdown report for section-title usage and unknown heading candidates.
 
 Scale/context:
@@ -105,9 +115,9 @@ Scale/context:
 Examples:
 
 ```bash
-python3 scripts/learning_section_title_report.py -o /tmp/report.md
-python3 scripts/learning_section_title_report.py --source raw --output-json /tmp/report.json -o /tmp/report.md
-python3 scripts/learning_section_title_report.py --source reduced --min-unknown-count 50 -o /tmp/reduced_report.md
+python3 scripts/learning_section_title_report.py -o .local/tmp/report.md
+python3 scripts/learning_section_title_report.py --source raw --output-json .local/tmp/report.json -o .local/tmp/report.md
+python3 scripts/learning_section_title_report.py --source reduced --min-unknown-count 50 -o .local/tmp/reduced_report.md
 ```
 
 Key options:
@@ -124,6 +134,7 @@ Key options:
 - `-o/--output`
 
 ### `learning_doc_quality_report.py`
+
 Builds markdown report for before/after document quality metrics per target.
 
 It compares each target's latest snapshot with its previous snapshot and reports deltas for:
@@ -137,8 +148,8 @@ It compares each target's latest snapshot with its previous snapshot and reports
 Examples:
 
 ```bash
-python3 scripts/learning_doc_quality_report.py -o /tmp/doc_quality.md
-python3 scripts/learning_doc_quality_report.py --run-label repo-batch-sample --output-json /tmp/doc_quality.json -o /tmp/doc_quality.md
+python3 scripts/learning_doc_quality_report.py -o .local/tmp/doc_quality.md
+python3 scripts/learning_doc_quality_report.py --run-label repo-batch-sample --output-json .local/tmp/doc_quality.json -o .local/tmp/doc_quality.md
 ```
 
 Key options:
@@ -149,14 +160,41 @@ Key options:
 - `--output-json`
 - `-o/--output`
 
+### `learning_refresh_triage_report.py`
+
+Generates a focused scanner triage bundle for a refresh run label.
+
+It resolves the latest matching batch id, then writes:
+
+- `<prefix>_urls.txt` (target URLs in the batch)
+- `<prefix>_bug_targets.tsv` (prioritized unresolved/provenance counters)
+- `<prefix>_scanner_bug_list.md` (concise triage summary)
+
+Examples:
+
+```bash
+python3 scripts/learning_refresh_triage_report.py --run-label roles25-refresh-20260322
+python3 scripts/learning_refresh_triage_report.py --run-label roles25-refresh-20260322 --top-n 20 --output-dir .local/tmp
+```
+
+Key options:
+
+- `--run-label` (required)
+- `--top-n` (default `12`)
+- `--output-dir` (default `.local/tmp`)
+- `--[no-]exclude-dummy` (default: exclude)
+- `--[no-]exclude-deprecated` (default: exclude)
+- `--prefix`
+
 ### `learning_feedback_report.py`
+
 Builds section-level feedback ranking reports to support iterative section tuning.
 
 Examples:
 
 ```bash
-python3 scripts/learning_feedback_report.py -o /tmp/feedback_ranking.md
-python3 scripts/learning_feedback_report.py --min-feedback 3 --output-json /tmp/feedback_ranking.json -o /tmp/feedback_ranking.md
+python3 scripts/learning_feedback_report.py -o .local/tmp/feedback_ranking.md
+python3 scripts/learning_feedback_report.py --min-feedback 3 --output-json .local/tmp/feedback_ranking.json -o .local/tmp/feedback_ranking.md
 ```
 
 Key options:
@@ -167,6 +205,7 @@ Key options:
 - `-o/--output`
 
 ### `learning_resolve_unknowns.py`
+
 LLM classifier for unknown normalized titles.
 
 Input modes:
@@ -177,7 +216,7 @@ Input modes:
 Examples:
 
 ```bash
-python3 scripts/learning_resolve_unknowns.py --input-json /tmp/report.json --min-count 5 --output-yaml /tmp/candidates.yml --output-report /tmp/review.md
+python3 scripts/learning_resolve_unknowns.py --input-json .local/tmp/report.json --min-count 5 --output-yaml .local/tmp/candidates.yml --output-report .local/tmp/review.md
 python3 scripts/learning_resolve_unknowns.py --dsn "$DATABASE_URL" --batch-size 100 --rpm 15
 ```
 
@@ -191,6 +230,7 @@ Key options:
 - `--output-report`
 
 ### `learning_materialize_sections.py`
+
 Materializes reduced section rows from raw snapshots into
 `learning.scan_snapshot_sections` and applies alias mapping from
 `learning.section_title_aliases`.
@@ -216,6 +256,7 @@ Behavior:
 - Full refresh truncates and rebuilds the reduced table
 
 ### `learning_alias_helper.py`
+
 Workflow helper for LLM review, alias apply/export/merge, display-title updates,
 and section-id rename/suggestion utilities.
 
@@ -233,9 +274,9 @@ Subcommands:
 Examples:
 
 ```bash
-python3 scripts/learning_alias_helper.py review --input-json /tmp/report.json --min-count 5 --output-yaml /tmp/candidates.yml --output-report /tmp/review.md
-python3 scripts/learning_alias_helper.py apply --yaml /tmp/candidates.yml --dry-run --no-run-materialize
-python3 scripts/learning_alias_helper.py apply --yaml /tmp/candidates.yml --min-section-total 85 --min-count 0
+python3 scripts/learning_alias_helper.py review --input-json .local/tmp/report.json --min-count 5 --output-yaml .local/tmp/candidates.yml --output-report .local/tmp/review.md
+python3 scripts/learning_alias_helper.py apply --yaml .local/tmp/candidates.yml --dry-run --no-run-materialize
+python3 scripts/learning_alias_helper.py apply --yaml .local/tmp/candidates.yml --min-section-total 85 --min-count 0
 python3 scripts/learning_alias_helper.py export-aliases --min-count 1
 python3 scripts/learning_alias_helper.py merge-aliases
 ```
@@ -279,6 +320,7 @@ Key `export-aliases` options:
 - `--dry-run`
 
 ### `cli_demo_matrix.py`
+
 Generates small, comparable CLI demo artifacts one scenario at a time.
 
 This helper prepares stable fixture copies under `debug_readmes/option_demos/` and
@@ -338,20 +380,20 @@ For normal learning-loop updates, prefer `apply` + `export-aliases` + `merge-ali
 ### 1) Generate review candidates from current report
 
 ```bash
-python3 scripts/learning_section_title_report.py --source reduced --output-json /tmp/report.json
-python3 scripts/learning_alias_helper.py review --input-json /tmp/report.json --min-count 5 --output-yaml /tmp/candidates.yml --output-report /tmp/review.md
+python3 scripts/learning_section_title_report.py --source reduced --output-json .local/tmp/report.json
+python3 scripts/learning_alias_helper.py review --input-json .local/tmp/report.json --min-count 5 --output-yaml .local/tmp/candidates.yml --output-report .local/tmp/review.md
 ```
 
 ### 2) Preview alias application (section-level threshold)
 
 ```bash
-python3 scripts/learning_alias_helper.py apply --yaml /tmp/candidates.yml --min-section-total 85 --min-count 0 --dry-run --no-run-materialize
+python3 scripts/learning_alias_helper.py apply --yaml .local/tmp/candidates.yml --min-section-total 85 --min-count 0 --dry-run --no-run-materialize
 ```
 
 ### 3) Apply aliases and rematerialize reduced rows
 
 ```bash
-python3 scripts/learning_alias_helper.py apply --yaml /tmp/candidates.yml --min-section-total 85 --min-count 0
+python3 scripts/learning_alias_helper.py apply --yaml .local/tmp/candidates.yml --min-section-total 85 --min-count 0
 ```
 
 ### 4) Export learned aliases and merge into app data
