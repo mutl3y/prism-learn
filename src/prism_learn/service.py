@@ -6,7 +6,7 @@ can evolve into a separate repository without carrying CLI coupling.
 
 from __future__ import annotations
 
-from concurrent.futures import ThreadPoolExecutor, as_completed
+from concurrent.futures import ThreadPoolExecutor, as_completed, wait
 from dataclasses import asdict, dataclass
 from datetime import UTC, datetime
 import os
@@ -16,6 +16,9 @@ from prism import api as scanner_api
 
 if TYPE_CHECKING:
     from .storage import SnapshotJsonlStore
+
+
+_INTERRUPT_FUTURE_WAIT_SECONDS = 2.0
 
 
 @dataclass(slots=True)
@@ -233,7 +236,13 @@ class LearningLoopService:
                         items[index] = record
                 except KeyboardInterrupt:
                     interrupted = True
+                    # Never block indefinitely on interrupt: cancel queued work,
+                    # then wait only a bounded amount for running tasks.
                     executor.shutdown(wait=False, cancel_futures=True)
+                    wait(
+                        tuple(future_to_index),
+                        timeout=_INTERRUPT_FUTURE_WAIT_SECONDS,
+                    )
                     raise
                 finally:
                     if not interrupted:

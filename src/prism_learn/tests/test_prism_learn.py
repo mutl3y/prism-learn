@@ -985,6 +985,50 @@ def test_learning_loop_service_repo_batch_fanout_uses_multiple_workers():
     assert len(fake_api.thread_ids) > 1
 
 
+def test_learning_loop_service_batch_interrupt_waits_for_executor_shutdown(
+    monkeypatch,
+):
+    import prism_learn.service as service_module
+
+    shutdown_calls = []
+    wait_calls = []
+
+    class _FakeExecutor:
+        def __init__(self, max_workers):
+            self.max_workers = max_workers
+
+        def submit(self, fn, target, **kwargs):
+            return object()
+
+        def shutdown(self, *, wait=True, cancel_futures=False):
+            shutdown_calls.append((wait, cancel_futures))
+
+    def _raising_as_completed(_future_to_index):
+        raise KeyboardInterrupt()
+
+    def _fake_wait(futures, *, timeout=None, return_when=None):
+        wait_calls.append((tuple(futures), timeout, return_when))
+        return set(), set(futures)
+
+    monkeypatch.setattr(service_module, "ThreadPoolExecutor", _FakeExecutor)
+    monkeypatch.setattr(service_module, "as_completed", _raising_as_completed)
+    monkeypatch.setattr(service_module, "wait", _fake_wait)
+
+    service = LearningLoopService(api_module=_FakeApi())
+    with pytest.raises(KeyboardInterrupt):
+        service.scan_repo_batch(
+            [
+                "https://github.com/example/a.git",
+                "https://github.com/example/b.git",
+            ],
+            batch_max_workers=2,
+        )
+
+    assert shutdown_calls == [(False, True)]
+    assert len(wait_calls) == 1
+    assert wait_calls[0][1] == service_module._INTERRUPT_FUTURE_WAIT_SECONDS
+
+
 def test_fetch_doc_quality_report_returns_before_after_deltas(monkeypatch):
     class _FakeCursor:
         def __enter__(self):
