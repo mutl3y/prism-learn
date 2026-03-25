@@ -86,6 +86,20 @@ def _fetch_bug_targets(
     exclude_dummy: bool,
     exclude_deprecated: bool,
 ) -> list[dict[str, Any]]:
+    # Provenance category key compatibility note:
+    # The prism scanner renamed the ambiguous-defaults bucket key in March 2026:
+    #   legacy (snapshots before the rename): ambiguous_defaults_vars_override
+    #   current (snapshots after the rename):  precedence_defaults_overridden_by_vars
+    # The scanner also writes the legacy key as a backward-compat alias for mixed-age
+    # cohorts, so new snapshots carry both keys; old snapshots carry only the legacy key.
+    #
+    # This query intentionally excludes that bucket from the triage view because it is
+    # an informational ambiguity category (vars/main.yml precedence), not an
+    # unresolved-noise signal.  It does not affect the unresolved_variables counter.
+    # If you add this bucket here in the future, you must sum both keys, e.g.:
+    #   COALESCE((... ->> 'precedence_defaults_overridden_by_vars')::int, 0)
+    #   + COALESCE((... ->> 'ambiguous_defaults_vars_override')::int, 0)
+    # to avoid under-counting against older stored snapshots.
     filters = ["unresolved > 0"]
     if exclude_dummy:
         filters.append("LOWER(COALESCE(role_name, '')) NOT LIKE '%%dummy%%'")
