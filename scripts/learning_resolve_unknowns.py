@@ -39,7 +39,7 @@ if str(SRC_ROOT) not in sys.path:
     sys.path.insert(0, str(SRC_ROOT))
 
 from prism_learn import fetch_section_title_report  # noqa: E402
-from prism.pattern_config import load_pattern_config  # noqa: E402
+from prism.scanner_config import load_pattern_config  # noqa: E402
 
 # ── GitHub Models defaults ──────────────────────────────────────────────────
 _GITHUB_MODELS_BASE_URL = "https://models.inference.ai.azure.com"
