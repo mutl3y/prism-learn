@@ -112,8 +112,14 @@ def _fetch_bug_targets(
         WITH raw AS (
             SELECT
                 s.target,
-                s.scan_payload->'metadata'->>'role_name' AS role_name,
-                s.scan_payload->'metadata'->>'description' AS description,
+                COALESCE(
+                    s.scan_payload->>'role_name',
+                    s.scan_payload->'metadata'->>'role_name'
+                ) AS role_name,
+                COALESCE(
+                    s.scan_payload->>'description',
+                    s.scan_payload->'metadata'->>'description'
+                ) AS description,
                 COALESCE((s.scan_payload->'metadata'->'scanner_counters'->>'total_variables')::int, 0) AS total_vars,
                 COALESCE((s.scan_payload->'metadata'->'scanner_counters'->>'unresolved_variables')::int, 0) AS unresolved,
                 COALESCE((s.scan_payload->'metadata'->'scanner_counters'->>'ambiguous_variables')::int, 0) AS ambiguous_vars,
